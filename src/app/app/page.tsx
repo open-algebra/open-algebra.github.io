@@ -172,9 +172,9 @@ export default function App() {
                 </Modal.Header>
                 <Modal.Body>
                     <div className={"pb-3"}>
-                        Welcome to OASIS! To get started, type in any expression such as "2x+3x". Oasis automatically
+                        Welcome to OASIS! To get started, type in any expression such as &quot;2x+3x&quot; Oasis automatically
                         recognizes the variables and is able to add them for you. Some variable names are reserved. For
-                        instance "i" is reserved for imaginary numbers.
+                        instance &quot;i&quot; is reserved for imaginary numbers.
                     </div>
                     <h5>Functions</h5>
                     Oasis also understands some functions. For instance, <code>dd(x^2,x)</code> takes derivative of x^2
