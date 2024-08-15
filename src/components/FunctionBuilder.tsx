@@ -15,7 +15,7 @@ interface FunctionBuilderProps {
     show: boolean,
     setShow: (show: boolean) => void
     setResult: (value: string) => void
-    oasis: never
+    oasis: any
 }
 
 export default function FunctionBuilder({
