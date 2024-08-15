@@ -16,6 +16,7 @@ import {
 import {FormEvent, useEffect, useRef, useState} from "react";
 import FunctionBuilder from "@/components/FunctionBuilder";
 import Script from "next/script";
+import Loading from "@/app/app/loading";
 
 interface HistoryEntry {
     query: string,
@@ -144,13 +145,6 @@ export default function App() {
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     }, [appState]);
-
-    const loadingScreen = (
-        <Stack className={"align-items-center justify-content-center vh-100"} gap={3}>
-            <Spinner/>
-            <h1 className={"mx-3"}>Hold on! Paradise is on its way!</h1>
-        </Stack>
-    );
 
     const app = (
         <>
@@ -299,9 +293,7 @@ export default function App() {
     return (
         <>
             <Script src="/OasisC.js" onLoad={() => setOasis((window as any).Module)}/>
-            {
-                oasis ? app : loadingScreen
-            }
+            { oasis ? app : <Loading /> }
         </>
     )
 }
