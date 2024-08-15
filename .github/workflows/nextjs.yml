@@ -34,6 +34,29 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Emscripten
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          source ./emsdk_env.sh
+
+      - name: Configure CMake
+        run: >
+          source "emsdk/emsdk_env.sh" &&
+          emcmake cmake -B cmake-build-web
+          -D OASIS_BUILD_PARANOID=OFF
+          -D OASIS_BUILD_TESTS=OFF
+          -D OASIS_BUILD_EXTRAS=ON
+          -S ${{ github.workspace }}/extern/OasisC
+
+      - name: Build
+        run: source "emsdk/emsdk_env.sh" && emmake cmake --build cmake-build-web --target OasisC
+
+      - name: Copy WebAssembly
+        run: cp cmake-build-web/OasisC.mjs public/
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
