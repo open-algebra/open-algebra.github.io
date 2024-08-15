@@ -26,8 +26,11 @@ export default function Home() {
                                     <CardText>Open Algebra Software for Inferring Solutions (OASIS) is a C++ library for
                                         embedding computer algebra and symbolic manipulation.</CardText>
                                     <div className={"flex-grow-1"}/>
-                                    <Button href={"https://github.com/open-algebra/Oasis"} variant={"dark"}>GitHub
-                                        Repository</Button>
+                                    <Stack gap={2}>
+                                        <Button href={"/Oasis"} variant={"light"} className={"border"}>API Documentation</Button>
+                                        <Button href={"https://github.com/open-algebra/Oasis"} variant={"dark"}>GitHub
+                                            Repository</Button>
+                                    </Stack>
                                 </CardBody>
                             </Card>
                         </Col>
