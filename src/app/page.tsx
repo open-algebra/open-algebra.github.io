@@ -62,13 +62,13 @@ export default function Home() {
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS Web</CardTitle>
                                     <CardText>OASIS Web is a frontend graphical user interface for OASIS that runs in
-                                        your browser.</CardText>
+                                        your browser. It is integrated with the Open Algebra website.</CardText>
                                     <div className={"flex-grow-1"}/>
                                     <Stack gap={2}>
                                         <Link href={"/app"} passHref legacyBehavior>
                                             <Button variant={"primary"}>Go to Oasis Web</Button>
                                         </Link>
-                                        <Button href={"https://github.com/open-algebra/webapp"} variant={"dark"}>GitHub
+                                        <Button href={"https://github.com/open-algebra/open-algebra.github.io"} variant={"dark"}>GitHub
                                             Repository</Button>
                                     </Stack>
                                 </CardBody>
