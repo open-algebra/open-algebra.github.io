@@ -1,5 +1,6 @@
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row, Stack} from "react-bootstrap";
 import Link from "next/link";
+import MagicGrid from "@/components/MagicGrid";
 
 export default function Home() {
     return (
@@ -18,9 +19,9 @@ export default function Home() {
                         inspire a passion for mathematics in people of all backgrounds.</p>
                     <h1>Projects</h1>
                     <p>The following is a list of projects that constitute the Open Algebra Project:</p>
-                    <Row className={"g-3"}>
-                        <Col md={6} lg={3}>
-                            <Card className={"h-100"}>
+                    <MagicGrid md={2}>
+                        <Col className={"pb-3"}>
+                            <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS</CardTitle>
                                     <CardText>Open Algebra Software for Inferring Solutions (OASIS) is a C++ library for
@@ -34,8 +35,8 @@ export default function Home() {
                                 </CardBody>
                             </Card>
                         </Col>
-                        <Col md={6} lg={3}>
-                            <Card className={"h-100"}>
+                        <Col className={"pb-3"}>
+                            <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OasisC</CardTitle>
                                     <CardText>OasisC is a C wrapper for the OASIS library.</CardText>
@@ -45,8 +46,8 @@ export default function Home() {
                                 </CardBody>
                             </Card>
                         </Col>
-                        <Col md={6} lg={3}>
-                            <Card className={"h-100"}>
+                        <Col className={"pb-3"}>
+                            <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS Desktop</CardTitle>
                                     <CardText>OASIS Desktop is a frontend graphical user interface for OASIS that runs
@@ -57,8 +58,8 @@ export default function Home() {
                                 </CardBody>
                             </Card>
                         </Col>
-                        <Col md={6} lg={3}>
-                            <Card className={"h-100"}>
+                        <Col className={"pb-3"}>
+                            <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS Web</CardTitle>
                                     <CardText>OASIS Web is a frontend graphical user interface for OASIS that runs in
@@ -74,7 +75,7 @@ export default function Home() {
                                 </CardBody>
                             </Card>
                         </Col>
-                    </Row>
+                    </MagicGrid>
                 </Container>
             </Stack>
         </main>
