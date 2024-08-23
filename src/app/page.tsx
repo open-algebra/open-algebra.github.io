@@ -1,34 +1,37 @@
-import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row, Stack} from "react-bootstrap";
+import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Stack} from "react-bootstrap";
 import Link from "next/link";
 import MagicGrid from "@/components/MagicGrid";
 
 export default function Home() {
-    return (
-        <main>
-            <Stack className="min-vh-100 justify-content-center">
-                <Container className={"my-5"}>
-                    <h1 className={"fw-semibold display-1"}>Open Algebra Project</h1>
+    return (<main>
+        <Container>
+            <Stack className="min-vh-100 justify-content-center py-5" gap={5}>
+                <h1 className={"display-1 text-center"}>Open Algebra Project</h1>
+                <div>
+                    <h2>Mission Statement</h2>
                     <p className={"lead"}>The Open Algebra Project is dedicated to democratizing access to powerful
                         mathematical tools by
-                        providing free, open-source, and accessible computer algebra software. Our mission is to empower
-                        individuals, educators, and researchers worldwide by eliminating barriers to advanced
-                        mathematical
-                        computation and fostering a collaborative community. Through innovation, inclusivity, and
-                        transparency, we strive to enhance mathematical education, facilitate groundbreaking research,
-                        and
-                        inspire a passion for mathematics in people of all backgrounds.</p>
-                    <h1>Projects</h1>
+                        providing free, open-source, and accessible computer algebra software. Our mission is to
+                        empower individuals, educators, and researchers worldwide by eliminating barriers to advanced
+                        mathematical computation and fostering a collaborative community. Through innovation,
+                        inclusivity, and transparency, we strive to enhance mathematical education, facilitate groundbreaking
+                        research, and inspire a passion for mathematics in people of all backgrounds.</p>
+                </div>
+                <div>
+                    <h2>Projects</h2>
                     <p>The following is a list of projects that constitute the Open Algebra Project:</p>
-                    <MagicGrid md={2}>
+                    <MagicGrid md={2} className={"g-3"}>
                         <Col className={"pb-3"}>
                             <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS</CardTitle>
-                                    <CardText>Open Algebra Software for Inferring Solutions (OASIS) is a C++ library for
+                                    <CardText>Open Algebra Software for Inferring Solutions (OASIS) is a C++ library
+                                        for
                                         embedding computer algebra and symbolic manipulation.</CardText>
                                     <div className={"flex-grow-1"}/>
                                     <Stack gap={2}>
-                                        <Button href={"/Oasis"} variant={"light"} className={"border"}>API Documentation</Button>
+                                        <Button href={"/Oasis"} variant={"light"} className={"border"}>API
+                                            Documentation</Button>
                                         <Button href={"https://github.com/open-algebra/Oasis"} variant={"dark"}>GitHub
                                             Repository</Button>
                                     </Stack>
@@ -50,7 +53,8 @@ export default function Home() {
                             <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS Desktop</CardTitle>
-                                    <CardText>OASIS Desktop is a frontend graphical user interface for OASIS that runs
+                                    <CardText>OASIS Desktop is a frontend graphical user interface for OASIS that
+                                        runs
                                         locally.</CardText>
                                     <div className={"flex-grow-1"}/>
                                     <Button href={"https://github.com/open-algebra/gui"} variant={"dark"}>GitHub
@@ -62,22 +66,24 @@ export default function Home() {
                             <Card>
                                 <CardBody as={Stack}>
                                     <CardTitle>OASIS Web</CardTitle>
-                                    <CardText>OASIS Web is a frontend graphical user interface for OASIS that runs in
+                                    <CardText>OASIS Web is a frontend graphical user interface for OASIS that runs
+                                        in
                                         your browser. It is integrated with the Open Algebra website.</CardText>
                                     <div className={"flex-grow-1"}/>
                                     <Stack gap={2}>
                                         <Link href={"/app"} passHref legacyBehavior>
                                             <Button variant={"primary"}>Go to Oasis Web</Button>
                                         </Link>
-                                        <Button href={"https://github.com/open-algebra/open-algebra.github.io"} variant={"dark"}>GitHub
+                                        <Button href={"https://github.com/open-algebra/open-algebra.github.io"}
+                                                variant={"dark"}>GitHub
                                             Repository</Button>
                                     </Stack>
                                 </CardBody>
                             </Card>
                         </Col>
                     </MagicGrid>
-                </Container>
+                </div>
             </Stack>
-        </main>
-    );
+        </Container>
+    </main>);
 }
