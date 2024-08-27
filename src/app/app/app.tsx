@@ -33,7 +33,6 @@ export default function App({ oasis }: { oasis: any }) {
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
     const [showLogBuilder, setShowLogBuilder] = useState(false);
     const [showInDevWarning, setShowInDevWarning] = useState(true);
-    const [showCookieDisclosure, setShowCookieDisclosure] = useState(true);
 
     function addToHistory(query: string, response: string) {
         setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentEntry: 0});
@@ -223,13 +222,6 @@ export default function App({ oasis }: { oasis: any }) {
                                         Here be dragons. If something does not work, please feel free to <Alert.Link
                                             href={"https://github.com/open-algebra/Oasis/issues/new/choose"}>file an
                                             issue</Alert.Link>!</Alert>}
-                                {showCookieDisclosure &&
-                                    <Alert variant={"light"} onClose={() => setShowCookieDisclosure(false)} dismissible>
-                                        We use Microsoft Clarity, which uses cookies, to better understand how you use
-                                        this website. For more information, see the <Alert.Link
-                                        href={"https://privacy.microsoft.com/privacystatement"}>Microsoft Privacy
-                                        Statement</Alert.Link>.
-                                    </Alert>}
                             </div>
                             {appState.history.map(({query, response, error}, index) => (
                                 <Stack gap={2} key={index}>
@@ -258,7 +250,7 @@ export default function App({ oasis }: { oasis: any }) {
                         </Stack>
                     </Container>
                 </div>
-                <div className={"bg-body shadow sticky-bottom"}>
+                <div className={"bg-body shadow sticky-bottom z-0"}>
                     <Container className={"my-3"}>
                         <Form onSubmit={onSubmit}>
                             <InputGroup hasValidation>

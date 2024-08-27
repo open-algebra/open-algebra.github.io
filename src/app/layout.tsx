@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import Script from "next/script";
+import CookieDisclaimer from "@/components/CookieDisclaimer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-light-subtle`}>{children}</body>
+      <body className={`${inter.className} bg-light-subtle`}>
+      <CookieDisclaimer />
+      {children}
       <Script id="clarity-script" strategy="afterInteractive">
         {`
         (function(c,l,a,r,i,t,y){
@@ -27,6 +30,7 @@ export default function RootLayout({
         })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
         `}
       </Script>
+      </body>
     </html>
   );
 }
