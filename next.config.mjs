@@ -10,7 +10,8 @@ const nextConfig = {
              */
             source: '/webapp', destination: '/app', permanent: true,
         }]
-    }
+    },
+    images: { unoptimized: true }
 };
 
 export default nextConfig;
