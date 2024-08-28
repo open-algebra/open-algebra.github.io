@@ -55,7 +55,7 @@ jobs:
         run: source "emsdk/emsdk_env.sh" && emmake cmake --build cmake-build-web --target OasisC
 
       - name: Copy WebAssembly
-        run: cp cmake-build-web/OasisC.js public/
+        run: cp cmake-build-web/OasisC.js src/app/app/
 
       - name: Detect package manager
         id: detect-package-manager

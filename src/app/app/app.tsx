@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Alert,
     Button,
@@ -12,6 +14,7 @@ import {
 } from "react-bootstrap";
 import {FormEvent, useEffect, useRef, useState} from "react";
 import FunctionBuilder from "@/components/FunctionBuilder";
+import loadOasis from "@/app/app/OasisC.mjs";
 
 interface HistoryEntry {
     query: string,
@@ -24,9 +27,10 @@ interface AppState {
     currentEntry: number,
 }
 
-export default function App({ oasis }: { oasis: any }) {
+export default function App() {
     const inputRef = useRef<HTMLInputElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
+    const [oasis, setOasis] = useState(null);
     const [appState, setAppState] = useState<AppState>({history: [], currentEntry: 0});
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
@@ -134,6 +138,10 @@ export default function App({ oasis }: { oasis: any }) {
         const url = URL.createObjectURL(blob);
         window.open(url);
     }
+
+    useEffect(() => {
+        loadOasis().then(oasis => setOasis(oasis));
+    }, [])
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
