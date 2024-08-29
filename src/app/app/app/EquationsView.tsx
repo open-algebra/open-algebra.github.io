@@ -9,11 +9,11 @@ export interface HistoryEntry {
 
 interface EquationsViewProps {
     history: HistoryEntry[]
-    currentEntry: number
+    currentInputExpressionStr: string
     oasis: any
 }
 
-export default function EquationsView({ history, currentEntry, oasis }: EquationsViewProps) {
+export default function EquationsView({ history, currentInputExpressionStr}: EquationsViewProps) {
     const [showInDevWarning, setShowInDevWarning] = useState(true);
 
     return (
@@ -44,12 +44,11 @@ export default function EquationsView({ history, currentEntry, oasis }: Equation
                     </Stack>
                 ))}
                 {
-                    !(currentEntry && oasis)
-                        ? null
-                        : <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
-                            <math display={"block"}
-                                  dangerouslySetInnerHTML={{__html: oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntry])}}></math>
-                        </div>
+                    currentInputExpressionStr &&
+                    <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
+                        <math display={"block"}
+                              dangerouslySetInnerHTML={{__html: currentInputExpressionStr}}></math>
+                    </div>
                 }
             </Stack>
         </Container>

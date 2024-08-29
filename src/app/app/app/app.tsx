@@ -7,17 +7,19 @@ import {
     Stack
 } from "react-bootstrap";
 import {FormEvent, ReactElement, useEffect, useRef, useState} from "react";
+import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
 import FunctionBuilder from "@/components/FunctionBuilder";
-
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
-import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
+import ParseExpression from "@/app/app/app/ParseExpression";
 
 import "./style.css"
 
 interface AppState {
     history: HistoryEntry[]
-    currentEntry: number,
+    currentInputText: string
+    currentInputExpressionStr: string
+    currentInputValid: boolean
 }
 
 function downloadXML(history: HistoryEntry[]) {
@@ -67,9 +69,8 @@ function downloadXML(history: HistoryEntry[]) {
 export default function App({ oasis }: { oasis: any }) {
     type ViewId = 'Equations View' | 'Text Input';
 
-    const inputRef = useRef<HTMLTextAreaElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
-    const [appState, setAppState] = useState<AppState>({history: [], currentEntry: 0});
+    const [appState, setAppState] = useState<AppState>({history: [], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
@@ -82,29 +83,22 @@ export default function App({ oasis }: { oasis: any }) {
     })
 
     function addToHistory(query: string, response: string) {
-        setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentEntry: 0});
+        setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
     }
 
     function addErrorToHistory(query: string, response: string) {
-        setAppState({...appState, history: [...appState.history, {query, response, error: true}], currentEntry: 0});
+        setAppState({...appState, history: [...appState.history, {query, response, error: true}], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
     }
 
     function appendToInput(addition: string) {
-        if (!inputRef.current) return;
-        inputRef.current.value += (inputRef.current.value === '' ? '' : ' ') + addition;
-        parseInput()
+        appState.currentInputText += (appState.currentInputText === '' ? '' : ' ') + addition;
+        appState.currentInputExpressionStr = ParseExpression(oasis, appState.currentInputText);
+        setAppState({ ...appState, currentInputValid: appState.currentInputExpressionStr.length > 0 });
     }
 
-    function parseInput() {
-        if (!oasis || !inputRef.current?.value) return;
-
-        if (appState.currentEntry) {
-            oasis.ccall('Oa_Free', 'void', ['number'], [appState.currentEntry]);
-        }
-
-        const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [inputRef.current?.value]);
-        const expression = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
-        setAppState({...appState, currentEntry: expression})
+    function onTextInputUpdate(str: string) {
+        appState.currentInputExpressionStr = ParseExpression(oasis, str);
+        setAppState({ ...appState, currentInputText: str, currentInputValid: appState.currentInputExpressionStr.length > 0 });
     }
 
     function closeHelp() {
@@ -114,17 +108,18 @@ export default function App({ oasis }: { oasis: any }) {
     function onSubmit(e: FormEvent) {
         e.preventDefault();
 
-        if (!oasis || !appState.currentEntry) return;
+        if (!oasis) return;
 
-        const queryStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [appState.currentEntry])
+        const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [appState.currentInputText]);
+        const query = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
 
-        if (inputRef.current) {
-            inputRef.current.value = '';
-        }
+        if (!query) return;
+
+        const queryStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [query])
 
         let result;
         try {
-            result = oasis.ccall('Oa_SimplifyNF', 'number', ['number'], [appState.currentEntry]);
+            result = oasis.ccall('Oa_SimplifyNF', 'number', ['number'], [query]);
         } catch (error) {
             addErrorToHistory(queryStr, (error as Error).message)
             return;
@@ -133,14 +128,14 @@ export default function App({ oasis }: { oasis: any }) {
         const resultStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [result])
 
         oasis.ccall('Oa_Free', 'void', ['number'], [result]);
-        oasis.ccall('Oa_Free', 'void', ['number'], [appState.currentEntry]);
+        oasis.ccall('Oa_Free', 'void', ['number'], [query]);
 
         addToHistory(queryStr, resultStr);
     }
 
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
-        "Equations View": <EquationsView history={appState.history} currentEntry={appState.currentEntry} oasis={oasis} />,
-        "Text Input": <TextInput onSubmit={onSubmit} onChange={parseInput} currentEntry={appState.currentEntry} inputRef={inputRef} />
+        "Equations View": <EquationsView history={appState.history} currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis} />,
+        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} currentText={appState.currentInputText} invalid={!appState.currentInputValid} />
     };
 
     useEffect(() => {
