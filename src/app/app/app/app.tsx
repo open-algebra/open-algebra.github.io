@@ -1,9 +1,5 @@
 import {
-    Alert,
-    Button,
     Container,
-    Form,
-    InputGroup,
     Modal,
     Nav,
     Navbar,
@@ -13,15 +9,57 @@ import {
 import {FormEvent, useEffect, useRef, useState} from "react";
 import FunctionBuilder from "@/components/FunctionBuilder";
 
-interface HistoryEntry {
-    query: string,
-    response: string
-    error: boolean
-}
+import "react-mosaic-component/react-mosaic-component.css"
+import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
+import TextInput from "@/app/app/app/TextInput";
 
 interface AppState {
     history: HistoryEntry[]
     currentEntry: number,
+}
+
+function downloadXML(history: HistoryEntry[]) {
+
+    const xmlDoc = document.implementation.createDocument(null, "root");
+    const domParser = new window.DOMParser();
+
+    for (const {query, response, error} of history) {
+        const entryElem = xmlDoc.createElement("Entry");
+
+        const queryElem = xmlDoc.createElement("Query");
+
+        const queryMathElem = xmlDoc.createElement("math");
+        queryMathElem.setAttribute("display", "block");
+
+        const queryElemContent = domParser.parseFromString(query, 'text/xml');
+        queryMathElem.appendChild(queryElemContent.documentElement.cloneNode(true));
+
+        queryElem.appendChild(queryMathElem);
+
+        const responseElem = xmlDoc.createElement(error ? "Error" : "Response")
+        if (error) {
+            responseElem.textContent = response;
+        } else {
+            const responseMathElem = xmlDoc.createElement("math");
+            responseMathElem.setAttribute("display", "block");
+
+            const responseElemContent = domParser.parseFromString(response, 'text/xml');
+            responseMathElem.appendChild(responseElemContent.documentElement.cloneNode(true));
+
+            responseElem.appendChild(responseMathElem);
+        }
+
+        entryElem.appendChild(queryElem);
+        entryElem.appendChild(responseElem);
+        xmlDoc.documentElement.appendChild(entryElem);
+    }
+
+    const serializer = new XMLSerializer();
+    const xmlString = serializer.serializeToString(xmlDoc);
+
+    const blob = new Blob([xmlString], {type: "text/xml"});
+    const url = URL.createObjectURL(blob);
+    window.open(url);
 }
 
 export default function App({ oasis }: { oasis: any }) {
@@ -32,7 +70,6 @@ export default function App({ oasis }: { oasis: any }) {
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
     const [showLogBuilder, setShowLogBuilder] = useState(false);
-    const [showInDevWarning, setShowInDevWarning] = useState(true);
 
     function addToHistory(query: string, response: string) {
         setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentEntry: 0});
@@ -91,50 +128,6 @@ export default function App({ oasis }: { oasis: any }) {
         addToHistory(queryStr, resultStr);
     }
 
-    function downloadXML() {
-
-        const xmlDoc = document.implementation.createDocument(null, "root");
-        const domParser = new window.DOMParser();
-
-        for (const {query, response, error} of appState.history) {
-            const entryElem = xmlDoc.createElement("Entry");
-
-            const queryElem = xmlDoc.createElement("Query");
-
-            const queryMathElem = xmlDoc.createElement("math");
-            queryMathElem.setAttribute("display", "block");
-
-            const queryElemContent = domParser.parseFromString(query, 'text/xml');
-            queryMathElem.appendChild(queryElemContent.documentElement.cloneNode(true));
-
-            queryElem.appendChild(queryMathElem);
-
-            const responseElem = xmlDoc.createElement(error ? "Error" : "Response")
-            if (error) {
-                responseElem.textContent = response;
-            } else {
-                const responseMathElem = xmlDoc.createElement("math");
-                responseMathElem.setAttribute("display", "block");
-
-                const responseElemContent = domParser.parseFromString(response, 'text/xml');
-                responseMathElem.appendChild(responseElemContent.documentElement.cloneNode(true));
-
-                responseElem.appendChild(responseMathElem);
-            }
-
-            entryElem.appendChild(queryElem);
-            entryElem.appendChild(responseElem);
-            xmlDoc.documentElement.appendChild(entryElem);
-        }
-
-        const serializer = new XMLSerializer();
-        const xmlString = serializer.serializeToString(xmlDoc);
-
-        const blob = new Blob([xmlString], {type: "text/xml"});
-        const url = URL.createObjectURL(blob);
-        window.open(url);
-    }
-
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     }, [appState]);
@@ -172,14 +165,14 @@ export default function App({ oasis }: { oasis: any }) {
                 </Modal.Body>
             </Modal>
             <Stack className="min-vh-100">
-                <Navbar expand="lg" className="bg-body" sticky="top">
+                <Navbar expand="lg" className="bg-light-subtle" sticky="top">
                     <Container>
                         <Navbar.Brand>OASIS Web</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">
                                 <NavDropdown title="File">
-                                    <NavDropdown.Item as={"button"} onClick={downloadXML}>Export as
+                                    <NavDropdown.Item as={"button"} onClick={() => downloadXML(appState.history)}>Export as
                                         XML</NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown title="Functions">
@@ -213,62 +206,11 @@ export default function App({ oasis }: { oasis: any }) {
                     <p className={"lead"}>Web Edition</p>
                 </Container>
                 <div className={"flex-grow-1 pb-3"}>
-                    <Container>
-                        <Stack gap={3}>
-                            <div>
-                                {showInDevWarning &&
-                                    <Alert variant={"warning"} onClose={() => setShowInDevWarning(false)} dismissible>Oasis,
-                                        OasisC, and Oasis Web are still under active development.
-                                        Here be dragons. If something does not work, please feel free to <Alert.Link
-                                            href={"https://github.com/open-algebra/Oasis/issues/new/choose"}>file an
-                                            issue</Alert.Link>!</Alert>}
-                            </div>
-                            {appState.history.map(({query, response, error}, index) => (
-                                <Stack gap={2} key={index}>
-                                    <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
-                                        <math display={"block"}
-                                              dangerouslySetInnerHTML={{__html: query}}></math>
-                                    </div>
-                                    {error
-                                        ? <div className={"align-self-start bg-danger-subtle rounded-5 p-3"}>
-                                            <strong>Error:</strong> {response}
-                                        </div>
-                                        : <div className={"align-self-start bg-secondary-subtle rounded-5 p-3"}>
-                                            <math display={"block"}
-                                                  dangerouslySetInnerHTML={{__html: response}}></math>
-                                        </div>}
-                                </Stack>
-                            ))}
-                            {
-                                !(appState.currentEntry && oasis)
-                                    ? null
-                                    : <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
-                                        <math display={"block"}
-                                              dangerouslySetInnerHTML={{__html: oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [appState.currentEntry])}}></math>
-                                    </div>
-                            }
-                        </Stack>
-                    </Container>
+                    <EquationsView history={appState.history} currentEntry={appState.currentEntry} oasis={oasis} />
                 </div>
                 <div className={"bg-body shadow sticky-bottom z-0"}>
                     <Container className={"my-3"}>
-                        <Form onSubmit={onSubmit}>
-                            <InputGroup hasValidation>
-                                <Form.Control
-                                    ref={inputRef}
-                                    placeholder="Enter an expression..."
-                                    isInvalid={appState.currentEntry === 0 && !!inputRef.current?.value}
-                                    onChange={parseInput}
-                                />
-                                <Button
-                                    variant="primary"
-                                    type={"submit"}
-                                    disabled={!appState.currentEntry}
-                                >Submit</Button>
-                                <Form.Control.Feedback type={"invalid"}>Failed to parse
-                                    expression</Form.Control.Feedback>
-                            </InputGroup>
-                        </Form>
+                        <TextInput onSubmit={onSubmit} onChange={parseInput} currentEntry={appState.currentEntry} inputRef={inputRef} />
                     </Container>
                 </div>
             </Stack>
