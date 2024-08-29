@@ -181,7 +181,7 @@ export default function App({ oasis }: { oasis: any }) {
             </Modal>
             <Stack className="min-vh-100">
                 <Navbar expand="lg" className="bg-light-subtle" sticky="top">
-                    <Container>
+                    <Container fluid>
                         <Navbar.Brand>OASIS Web</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                         <Navbar.Collapse id="basic-navbar-nav">
@@ -217,10 +217,10 @@ export default function App({ oasis }: { oasis: any }) {
                     </Container>
                 </Navbar>
                 <Mosaic<ViewId>
-                    className={"mosaic-blueprint-theme flex-grow-1"}
+                    className={"mosaic-blueprint-theme bg-light-subtle flex-grow-1"}
                     blueprintNamespace={'bp5'}
                     renderTile={(id, path) => (
-                        <MosaicWindow<ViewId> path={path} title={id} className={"rounded shadow"} toolbarControls={DEFAULT_CONTROLS_WITHOUT_CREATION}>
+                        <MosaicWindow<ViewId> path={path} title={id} className={"rounded shadow border"} toolbarControls={DEFAULT_CONTROLS_WITHOUT_CREATION}>
                             {ELEMENT_MAP[id]}
                         </MosaicWindow>
                     )}
