@@ -1,11 +1,13 @@
+'use client'
+
+import {useEffect, useState} from "react";
 import Loading from "@/app/app/loading";
 import App from "@/app/app/app";
-import {Suspense} from "react";
+import loadOasis from "./OasisC.js"
 
 export default function AppPage() {
-    return (
-        <Suspense fallback={<Loading />}>
-            <App />
-        </Suspense>
-    )
+    const [oasis, setOasis] = useState();
+    useEffect(() => { loadOasis().then(oasis => setOasis(oasis)); }, [])
+
+    return oasis ? <App oasis={oasis} /> : <Loading />
 }
