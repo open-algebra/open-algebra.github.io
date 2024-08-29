@@ -6,12 +6,14 @@ import {
     NavDropdown,
     Stack
 } from "react-bootstrap";
-import {FormEvent, useEffect, useRef, useState} from "react";
+import {FormEvent, ReactElement, useEffect, useRef, useState} from "react";
 import FunctionBuilder from "@/components/FunctionBuilder";
 
-import "react-mosaic-component/react-mosaic-component.css"
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
+import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
+
+import "./style.css"
 
 interface AppState {
     history: HistoryEntry[]
@@ -63,13 +65,21 @@ function downloadXML(history: HistoryEntry[]) {
 }
 
 export default function App({ oasis }: { oasis: any }) {
-    const inputRef = useRef<HTMLInputElement>(null);
+    type ViewId = 'Equations View' | 'Text Input';
+
+    const inputRef = useRef<HTMLTextAreaElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
     const [appState, setAppState] = useState<AppState>({history: [], currentEntry: 0});
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
     const [showLogBuilder, setShowLogBuilder] = useState(false);
+    const [windowLayout, setWindowLayout] = useState<MosaicNode<ViewId> | null>({
+        direction: 'column',
+        first: 'Equations View',
+        second: 'Text Input',
+        splitPercentage: 80
+    })
 
     function addToHistory(query: string, response: string) {
         setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentEntry: 0});
@@ -127,6 +137,11 @@ export default function App({ oasis }: { oasis: any }) {
 
         addToHistory(queryStr, resultStr);
     }
+
+    const ELEMENT_MAP: Record<ViewId, ReactElement> = {
+        "Equations View": <EquationsView history={appState.history} currentEntry={appState.currentEntry} oasis={oasis} />,
+        "Text Input": <TextInput onSubmit={onSubmit} onChange={parseInput} currentEntry={appState.currentEntry} inputRef={inputRef} />
+    };
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
@@ -201,18 +216,17 @@ export default function App({ oasis }: { oasis: any }) {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-                <Container fluid className="text-center py-3">
-                    <h1>Open Algebra Software for Inferring Solutions</h1>
-                    <p className={"lead"}>Web Edition</p>
-                </Container>
-                <div className={"flex-grow-1 pb-3"}>
-                    <EquationsView history={appState.history} currentEntry={appState.currentEntry} oasis={oasis} />
-                </div>
-                <div className={"bg-body shadow sticky-bottom z-0"}>
-                    <Container className={"my-3"}>
-                        <TextInput onSubmit={onSubmit} onChange={parseInput} currentEntry={appState.currentEntry} inputRef={inputRef} />
-                    </Container>
-                </div>
+                <Mosaic<ViewId>
+                    className={"mosaic-blueprint-theme flex-grow-1"}
+                    blueprintNamespace={'bp5'}
+                    renderTile={(id, path) => (
+                        <MosaicWindow<ViewId> path={path} title={id} className={"rounded shadow"} toolbarControls={DEFAULT_CONTROLS_WITHOUT_CREATION}>
+                            {ELEMENT_MAP[id]}
+                        </MosaicWindow>
+                    )}
+                    value={windowLayout}
+                    onChange={newLayout => setWindowLayout(newLayout)}
+                />
             </Stack>
             <div ref={bottomRef}/>
         </>

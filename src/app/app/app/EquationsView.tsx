@@ -17,7 +17,7 @@ export default function EquationsView({ history, currentEntry, oasis }: Equation
     const [showInDevWarning, setShowInDevWarning] = useState(true);
 
     return (
-        <Container>
+        <Container className={"py-3"}>
             <Stack gap={3}>
                 <div>
                     {showInDevWarning &&

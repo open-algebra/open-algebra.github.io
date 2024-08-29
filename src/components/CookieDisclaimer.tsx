@@ -7,7 +7,7 @@ export default function CookieDisclaimer()
 {
     const [showCookieState, setShowCookieState] = useState<boolean>(true)
 
-    return (<ToastContainer className={"p-3 z-1 position-fixed"} position={"bottom-end"}>
+    return (<ToastContainer className={"p-3 z-4 position-fixed"} position={"bottom-end"}>
         <Toast show={showCookieState} onClose={() => setShowCookieState(false)}>
             <ToastHeader><span className={"me-auto"}>Cookie Statement</span></ToastHeader>
             <ToastBody>
