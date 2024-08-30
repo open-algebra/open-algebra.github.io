@@ -169,6 +169,16 @@ export default function App({ oasis }: { oasis: any }) {
     };
 
     useEffect(() => {
+        if (typeof window === "undefined" || !window.matchMedia('(max-width: 991px)').matches) return
+        setWindowLayout({
+            direction: "column",
+            first: "Equations View",
+            second: "Keypad",
+            splitPercentage: 50
+        })
+    }, []);
+
+    useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     }, [appState]);
 
