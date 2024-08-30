@@ -161,6 +161,30 @@ export default function App({ oasis }: { oasis: any }) {
         addToHistory(queryStr, resultStr);
     }
 
+    function openMosaicWindow(viewId: ViewId) {
+        setWindowLayout({
+            direction: "row",
+            first: windowLayout!,
+            second: viewId,
+            splitPercentage: 66,
+        });
+    }
+
+    function isWindowOpen(viewId: ViewId): boolean {
+        // Check if the viewId exists in the current windowLayout
+        const checkInLayout = (layout: typeof windowLayout): boolean => {
+            if (!layout) {
+                return false;
+            }
+            if (typeof layout === 'string') {
+                return layout === viewId;
+            }
+            return checkInLayout(layout.first) || checkInLayout(layout.second);
+        };
+
+        return checkInLayout(windowLayout);
+    }
+
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
         "Equations View": <EquationsView history={appState.history} currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis} />,
         "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} currentText={appState.currentInputText} invalid={!appState.currentInputValid} />,
@@ -219,6 +243,14 @@ export default function App({ oasis }: { oasis: any }) {
                                 <NavDropdown title="File">
                                     <NavDropdown.Item as={"button"} onClick={() => downloadXML(appState.history)}>Export as
                                         XML</NavDropdown.Item>
+                                </NavDropdown>
+                                <NavDropdown title="View">
+                                    <NavDropdown.Item as={"button"}
+                                                      onClick={() => openMosaicWindow("Equations View")} disabled={isWindowOpen("Equations View")}>Open Equations View</NavDropdown.Item>
+                                    <NavDropdown.Item as={"button"}
+                                                      onClick={() => openMosaicWindow("Text Input")} disabled={isWindowOpen("Text Input")}>Open Text Input</NavDropdown.Item>
+                                    <NavDropdown.Item as={"button"}
+                                                      onClick={() => openMosaicWindow("Keypad")} disabled={isWindowOpen("Keypad")}>Open Keypad</NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown title="Functions">
                                     <NavDropdown.Item as={"button"}
