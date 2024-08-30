@@ -233,7 +233,7 @@ export default function App({ oasis }: { oasis: any }) {
                     takes the logarithm of 100 with a base of 10.
                 </Modal.Body>
             </Modal>
-            <Stack className="min-vh-100">
+            <Stack style={{height: "100svh"}}>
                 <Navbar expand="lg" sticky="top">
                     <Container fluid>
                         <Navbar.Brand>OASIS Web</Navbar.Brand>
