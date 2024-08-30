@@ -8,7 +8,7 @@ import {
 } from "react-bootstrap";
 import {FormEvent, ReactElement, useEffect, useRef, useState} from "react";
 import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
-import FunctionBuilder from "@/components/FunctionBuilder";
+import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
 import ParseExpression from "@/app/app/app/ParseExpression";
@@ -175,7 +175,7 @@ export default function App({ oasis }: { oasis: any }) {
                 </Modal.Body>
             </Modal>
             <Stack className="min-vh-100">
-                <Navbar expand="lg" className="bg-light-subtle" sticky="top">
+                <Navbar expand="lg" sticky="top">
                     <Container fluid>
                         <Navbar.Brand>OASIS Web</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
