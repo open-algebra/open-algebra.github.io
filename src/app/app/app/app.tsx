@@ -6,15 +6,15 @@ import {
     NavDropdown,
     Stack
 } from "react-bootstrap";
-import {FormEvent, ReactElement, useEffect, useRef, useState} from "react";
+import {FormEvent, ReactElement, useEffect, useState} from "react";
 import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
 import ParseExpression from "@/app/app/app/ParseExpression";
+import Keypad from "@/app/app/app/Keypad";
 
 import "./style.css"
-import Keypad from "@/app/app/app/Keypad";
 
 interface AppState {
     history: HistoryEntry[]
@@ -70,7 +70,6 @@ function downloadXML(history: HistoryEntry[]) {
 export default function App({ oasis }: { oasis: any }) {
     type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
-    const bottomRef = useRef<HTMLDivElement>(null);
     const [appState, setAppState] = useState<AppState>({history: [], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
@@ -178,10 +177,6 @@ export default function App({ oasis }: { oasis: any }) {
         })
     }, []);
 
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-    }, [appState]);
-
     return (
         <>
             <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
@@ -263,7 +258,6 @@ export default function App({ oasis }: { oasis: any }) {
                     onChange={newLayout => setWindowLayout(newLayout)}
                 />
             </Stack>
-            <div ref={bottomRef}/>
         </>
     )
 }

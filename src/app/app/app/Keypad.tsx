@@ -46,9 +46,9 @@ const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-k
 export default function Keypad({currentInputText, valid, onKeyDown, onBackspace, onClear, onSubmit}: KeypadProps) {
     console.log(Object.keys(KEYS))
 
-    return (<Stack gap={2} className={"h-100 p-2"}>
-            <FormControl value={currentInputText} isInvalid={!valid} readOnly/>
-            <Row xs={4} className={"g-2 flex-grow-1 overflow-y-scroll"}>
+    return (<Stack gap={2} className={"h-100 px-2 pt-2"}>
+            <FormControl placeholder={"Enter an expression..."} value={currentInputText} isInvalid={!valid} readOnly/>
+            <Row xs={4} className={"pb-2 g-2 flex-grow-1 overflow-y-scroll"}>
                 <Col>
                     <Button variant={"light"} className={"w-100 h-100 border"} onClick={onClear}>Clear</Button>
                 </Col>
