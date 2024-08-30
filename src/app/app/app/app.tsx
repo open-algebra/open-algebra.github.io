@@ -14,6 +14,7 @@ import TextInput from "@/app/app/app/TextInput";
 import ParseExpression from "@/app/app/app/ParseExpression";
 
 import "./style.css"
+import Keypad from "@/app/app/app/Keypad";
 
 interface AppState {
     history: HistoryEntry[]
@@ -67,7 +68,7 @@ function downloadXML(history: HistoryEntry[]) {
 }
 
 export default function App({ oasis }: { oasis: any }) {
-    type ViewId = 'Equations View' | 'Text Input';
+    type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
     const bottomRef = useRef<HTMLDivElement>(null);
     const [appState, setAppState] = useState<AppState>({history: [], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
@@ -76,10 +77,15 @@ export default function App({ oasis }: { oasis: any }) {
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
     const [showLogBuilder, setShowLogBuilder] = useState(false);
     const [windowLayout, setWindowLayout] = useState<MosaicNode<ViewId> | null>({
-        direction: 'column',
+        direction: 'row',
         first: 'Equations View',
-        second: 'Text Input',
-        splitPercentage: 80
+        second: {
+            direction: 'column',
+            first: 'Text Input',
+            second: 'Keypad',
+            splitPercentage: 25
+        },
+        splitPercentage: 75
     })
 
     function addToHistory(query: string, response: string) {
@@ -91,7 +97,7 @@ export default function App({ oasis }: { oasis: any }) {
     }
 
     function appendToInput(addition: string) {
-        appState.currentInputText += (appState.currentInputText === '' ? '' : ' ') + addition;
+        appState.currentInputText += addition;
         const newInputExpressionStr = ParseExpression(oasis, appState.currentInputText);
         if (newInputExpressionStr) {
             appState.currentInputExpressionStr = newInputExpressionStr;
@@ -106,13 +112,30 @@ export default function App({ oasis }: { oasis: any }) {
         }
         setAppState({ ...appState, currentInputText: str, currentInputValid: newInputExpressionStr.length > 0 });
     }
+    
+    function clearTextInput() {
+        setAppState({ ...appState, currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
+    }
+    
+    function backspaceTextInput() {
+        if (appState.currentInputText.length < 1) return;
+
+        const newText = appState.currentInputText.slice(0, -1);
+        const newInputExpressionStr = ParseExpression(oasis, newText);
+        setAppState({
+            ...appState,
+            currentInputText: newText,
+            currentInputExpressionStr: newInputExpressionStr || "",
+            currentInputValid: !!newInputExpressionStr
+        });
+    }
 
     function closeHelp() {
         setShowHelp(false)
     }
 
-    function onSubmit(e: FormEvent) {
-        e.preventDefault();
+    function onSubmit(e?: FormEvent) {
+        if (e) e.preventDefault();
 
         if (!oasis) return;
 
@@ -141,7 +164,8 @@ export default function App({ oasis }: { oasis: any }) {
 
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
         "Equations View": <EquationsView history={appState.history} currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis} />,
-        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} currentText={appState.currentInputText} invalid={!appState.currentInputValid} />
+        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} currentText={appState.currentInputText} invalid={!appState.currentInputValid} />,
+        "Keypad": <Keypad currentInputText={appState.currentInputText} valid={appState.currentInputValid} onKeyDown={(key: string) => appendToInput(key)} onClear={clearTextInput} onBackspace={backspaceTextInput} onSubmit={onSubmit} />
     };
 
     useEffect(() => {

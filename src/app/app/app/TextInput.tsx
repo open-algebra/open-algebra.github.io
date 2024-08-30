@@ -39,8 +39,6 @@ export default function TextInput({ onSubmit, currentText, setCurrentText, inval
                         onKeyDown={onEnterPress}
                         value={currentText}
                     />
-                    <Form.Control.Feedback type={"invalid"}>Failed to parse
-                        expression</Form.Control.Feedback>
                     <Button
                         variant="primary"
                         type={"submit"}
