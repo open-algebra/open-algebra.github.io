@@ -1,4 +1,4 @@
-import {FormEventHandler, useRef} from "react";
+import {FormEventHandler, useRef, KeyboardEvent} from "react";
 import {Button, Form, Stack} from "react-bootstrap";
 
 
@@ -11,6 +11,14 @@ interface TextInputProps {
 
 export default function TextInput({ onSubmit, currentText, setCurrentText, invalid }: TextInputProps) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
+
+    function onEnterPress(e: KeyboardEvent<HTMLTextAreaElement>) {
+        if(e.key == "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            formRef.current?.requestSubmit();
+        }
+    }
 
     function onChange() {
         if (!inputRef.current) { return; }
@@ -19,7 +27,7 @@ export default function TextInput({ onSubmit, currentText, setCurrentText, inval
 
     return (
         <div className={"p-3 h-100"}>
-            <Form onSubmit={onSubmit} className={"h-100"}>
+            <Form onSubmit={onSubmit} className={"h-100"} ref={formRef}>
                 <Stack gap={3} className={"h-100"}>
                     <Form.Control
                         as={"textarea"}
@@ -28,6 +36,7 @@ export default function TextInput({ onSubmit, currentText, setCurrentText, inval
                         placeholder="Enter an expression..."
                         isInvalid={invalid}
                         onChange={onChange}
+                        onKeyDown={onEnterPress}
                         value={currentText}
                     />
                     <Form.Control.Feedback type={"invalid"}>Failed to parse

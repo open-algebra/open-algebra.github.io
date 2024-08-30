@@ -92,13 +92,19 @@ export default function App({ oasis }: { oasis: any }) {
 
     function appendToInput(addition: string) {
         appState.currentInputText += (appState.currentInputText === '' ? '' : ' ') + addition;
-        appState.currentInputExpressionStr = ParseExpression(oasis, appState.currentInputText);
-        setAppState({ ...appState, currentInputValid: appState.currentInputExpressionStr.length > 0 });
+        const newInputExpressionStr = ParseExpression(oasis, appState.currentInputText);
+        if (newInputExpressionStr) {
+            appState.currentInputExpressionStr = newInputExpressionStr;
+        }
+        setAppState({ ...appState, currentInputValid: newInputExpressionStr.length > 0 });
     }
 
     function onTextInputUpdate(str: string) {
-        appState.currentInputExpressionStr = ParseExpression(oasis, str);
-        setAppState({ ...appState, currentInputText: str, currentInputValid: appState.currentInputExpressionStr.length > 0 });
+        const newInputExpressionStr = ParseExpression(oasis, str);
+        if (newInputExpressionStr) {
+            appState.currentInputExpressionStr = newInputExpressionStr;
+        }
+        setAppState({ ...appState, currentInputText: str, currentInputValid: newInputExpressionStr.length > 0 });
     }
 
     function closeHelp() {
