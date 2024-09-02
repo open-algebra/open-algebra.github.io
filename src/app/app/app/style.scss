@@ -1,0 +1,17 @@
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";
+@import "react-mosaic-component/react-mosaic-component.css";
+
+@import "@blueprintjs/core/lib/css/blueprint.css";
+
+.mosaic-window {
+  .mosaic-window-controls {
+    .expand-button {
+      @extend .bi, .bi-arrows-angle-expand;
+    }
+
+    .close-button {
+      @extend .bi, .bi-x-lg;
+    }
+  }
+}

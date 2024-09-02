@@ -14,7 +14,7 @@ import TextInput from "@/app/app/app/TextInput";
 import ParseExpression from "@/app/app/app/ParseExpression";
 import Keypad from "@/app/app/app/Keypad";
 
-import "./style.css"
+import "./style.scss"
 
 interface AppState {
     history: HistoryEntry[]
