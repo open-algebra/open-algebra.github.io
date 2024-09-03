@@ -6,8 +6,14 @@ import {
     NavDropdown,
     Stack
 } from "react-bootstrap";
-import {FormEvent, ReactElement, useEffect, useState} from "react";
-import {DEFAULT_CONTROLS_WITHOUT_CREATION, Mosaic, MosaicNode, MosaicWindow} from "react-mosaic-component";
+import React, {FormEvent, ReactElement, useEffect, useState} from "react";
+import {
+    DEFAULT_CONTROLS_WITHOUT_CREATION,
+    ExpandButton,
+    Mosaic,
+    MosaicNode,
+    MosaicWindow
+} from "react-mosaic-component";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
@@ -246,8 +252,6 @@ export default function App({ oasis }: { oasis: any }) {
                                 </NavDropdown>
                                 <NavDropdown title="View">
                                     <NavDropdown.Item as={"button"}
-                                                      onClick={() => openMosaicWindow("Equations View")} disabled={isWindowOpen("Equations View")}>Open Equations View</NavDropdown.Item>
-                                    <NavDropdown.Item as={"button"}
                                                       onClick={() => openMosaicWindow("Text Input")} disabled={isWindowOpen("Text Input")}>Open Text Input</NavDropdown.Item>
                                     <NavDropdown.Item as={"button"}
                                                       onClick={() => openMosaicWindow("Keypad")} disabled={isWindowOpen("Keypad")}>Open Keypad</NavDropdown.Item>
@@ -282,7 +286,9 @@ export default function App({ oasis }: { oasis: any }) {
                     className={"mosaic-blueprint-theme bg-light-subtle flex-grow-1"}
                     blueprintNamespace={'bp5'}
                     renderTile={(id, path) => (
-                        <MosaicWindow<ViewId> path={path} title={id} className={"rounded shadow border"} toolbarControls={DEFAULT_CONTROLS_WITHOUT_CREATION}>
+                        <MosaicWindow<ViewId>
+                            path={path} title={id} className={"rounded shadow border"}
+                            toolbarControls={id !== 'Equations View' ? DEFAULT_CONTROLS_WITHOUT_CREATION : React.Children.toArray([<ExpandButton />])}>
                             {ELEMENT_MAP[id]}
                         </MosaicWindow>
                     )}
