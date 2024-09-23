@@ -1,19 +1,11 @@
 import {
-    Container,
-    Modal,
-    Nav,
-    Navbar,
-    NavDropdown,
-    Stack
+    Container, Modal, Nav, Navbar, NavDropdown, Stack
 } from "react-bootstrap";
 import React, {FormEvent, ReactElement, useEffect, useState} from "react";
 import {
-    DEFAULT_CONTROLS_WITHOUT_CREATION,
-    ExpandButton,
-    Mosaic,
-    MosaicNode,
-    MosaicWindow
+    DEFAULT_CONTROLS_WITHOUT_CREATION, ExpandButton, Mosaic, MosaicNode, MosaicWindow
 } from "react-mosaic-component";
+import {useImmerReducer} from "use-immer";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
@@ -21,6 +13,7 @@ import ParseExpression from "@/app/app/app/ParseExpression";
 import Keypad from "@/app/app/app/Keypad";
 
 import "./style.scss"
+import {Draft} from "immer";
 
 interface AppState {
     history: HistoryEntry[]
@@ -73,66 +66,137 @@ function downloadXML(history: HistoryEntry[]) {
     window.open(url);
 }
 
-export default function App({ oasis }: { oasis: any }) {
-    type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
+interface AddToHistoryAction {
+    type: 'addToHistory'
+    query: string,
+    response: string
+}
 
-    const [appState, setAppState] = useState<AppState>({history: [], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
+interface AddErrorToHistoryAction {
+    type: 'addErrorToHistory'
+    query: string,
+    error: string
+}
+
+interface AppendToInputAction {
+    type: 'appendToInput'
+    addition: string
+    oasis: any
+}
+
+interface SetInputAction {
+    type: 'setInput'
+    input: string
+    oasis: any
+}
+
+interface ClearInputAction {
+    type: 'clearInput'
+}
+
+interface BackspaceInputAction {
+    type: 'backspaceInput',
+    oasis: any
+}
+
+type Action =
+    AddToHistoryAction
+    | AddErrorToHistoryAction
+    | AppendToInputAction
+    | SetInputAction
+    | ClearInputAction
+    | BackspaceInputAction;
+
+function appStateReducer(draft: Draft<AppState>, action: Action) {
+    switch (action.type) {
+        case "addToHistory": {
+            const {query, response} = action;
+            draft.history.push({query, response, error: false})
+        }
+            break;
+        case "addErrorToHistory": {
+            const {query, error} = action;
+            draft.history.push({query, response: error, error: true})
+        }
+            break;
+        case "setInput": {
+            const { oasis, input } = action
+            const newInputExpressionStr = ParseExpression(oasis, input);
+            if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
+
+            draft.currentInputText = input
+            draft.currentInputValid = newInputExpressionStr.length > 0;
+        }
+            break;
+        case "appendToInput": {
+            const { addition, oasis } = action;
+            draft.currentInputText += addition;
+            const newInputExpressionStr = ParseExpression(oasis, draft.currentInputText);
+            if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
+            draft.currentInputValid = newInputExpressionStr.length > 0;
+        }
+            break;
+        case "clearInput":
+            draft.currentInputText =  "";
+            draft.currentInputExpressionStr = "";
+            draft.currentInputValid = true;
+            break;
+        case "backspaceInput":
+            if (draft.currentInputText.length < 1) return;
+
+            const newText = draft.currentInputText.slice(0, -1);
+            const newInputExpressionStr = ParseExpression(action.oasis, newText);
+
+            draft.currentInputText = newText;
+            draft.currentInputExpressionStr = newInputExpressionStr || "";
+            draft.currentInputValid = !!newInputExpressionStr;
+            break;
+    }
+}
+
+type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
+
+export default function App({oasis}: { oasis: any }) {
+    const [appState, dispatch] = useImmerReducer(appStateReducer, {
+        history: [],
+        currentInputText: "",
+        currentInputExpressionStr: "",
+        currentInputValid: true
+    });
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);
     const [showLogBuilder, setShowLogBuilder] = useState(false);
     const [windowLayout, setWindowLayout] = useState<MosaicNode<ViewId> | null>({
-        direction: 'row',
-        first: 'Equations View',
-        second: {
-            direction: 'column',
-            first: 'Text Input',
-            second: 'Keypad',
-            splitPercentage: 25
-        },
-        splitPercentage: 75
+        direction: 'row', first: 'Equations View', second: {
+            direction: 'column', first: 'Text Input', second: 'Keypad', splitPercentage: 25
+        }, splitPercentage: 75
     })
 
     function addToHistory(query: string, response: string) {
-        setAppState({...appState, history: [...appState.history, {query, response, error: false}], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
+        dispatch({ type: 'addToHistory', query, response });
+        dispatch({ type: 'clearInput' });
     }
 
-    function addErrorToHistory(query: string, response: string) {
-        setAppState({...appState, history: [...appState.history, {query, response, error: true}], currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
+    function addErrorToHistory(query: string, error: string) {
+        dispatch({ type: 'addErrorToHistory', query, error });
+        dispatch({ type: 'clearInput' });
     }
 
     function appendToInput(addition: string) {
-        appState.currentInputText += addition;
-        const newInputExpressionStr = ParseExpression(oasis, appState.currentInputText);
-        if (newInputExpressionStr) {
-            appState.currentInputExpressionStr = newInputExpressionStr;
-        }
-        setAppState({ ...appState, currentInputValid: newInputExpressionStr.length > 0 });
+        dispatch({ type: 'appendToInput', addition, oasis });
     }
 
-    function onTextInputUpdate(str: string) {
-        const newInputExpressionStr = ParseExpression(oasis, str);
-        if (newInputExpressionStr) {
-            appState.currentInputExpressionStr = newInputExpressionStr;
-        }
-        setAppState({ ...appState, currentInputText: str, currentInputValid: newInputExpressionStr.length > 0 });
+    function onTextInputUpdate(input: string) {
+        dispatch({ type: 'setInput', input, oasis });
     }
-    
+
     function clearTextInput() {
-        setAppState({ ...appState, currentInputText: "", currentInputExpressionStr: "", currentInputValid: true});
+        dispatch({ type: 'clearInput' });
     }
-    
-    function backspaceTextInput() {
-        if (appState.currentInputText.length < 1) return;
 
-        const newText = appState.currentInputText.slice(0, -1);
-        const newInputExpressionStr = ParseExpression(oasis, newText);
-        setAppState({
-            ...appState,
-            currentInputText: newText,
-            currentInputExpressionStr: newInputExpressionStr || "",
-            currentInputValid: !!newInputExpressionStr
-        });
+    function backspaceTextInput() {
+        dispatch({ type: 'backspaceInput', oasis });
     }
 
     function closeHelp() {
@@ -169,10 +233,7 @@ export default function App({ oasis }: { oasis: any }) {
 
     function openMosaicWindow(viewId: ViewId) {
         setWindowLayout({
-            direction: "row",
-            first: windowLayout!,
-            second: viewId,
-            splitPercentage: 66,
+            direction: "row", first: windowLayout!, second: viewId, splitPercentage: 66,
         });
     }
 
@@ -192,23 +253,23 @@ export default function App({ oasis }: { oasis: any }) {
     }
 
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
-        "Equations View": <EquationsView history={appState.history} currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis} />,
-        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} currentText={appState.currentInputText} invalid={!appState.currentInputValid} />,
-        "Keypad": <Keypad currentInputText={appState.currentInputText} valid={appState.currentInputValid} onKeyDown={(key: string) => appendToInput(key)} onClear={clearTextInput} onBackspace={backspaceTextInput} onSubmit={onSubmit} />
+        "Equations View": <EquationsView history={appState.history}
+                                         currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis}/>,
+        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate}
+                                 currentText={appState.currentInputText} invalid={!appState.currentInputValid}/>,
+        "Keypad": <Keypad currentInputText={appState.currentInputText} valid={appState.currentInputValid}
+                          onKeyDown={(key: string) => appendToInput(key)} onClear={clearTextInput}
+                          onBackspace={backspaceTextInput} onSubmit={onSubmit}/>
     };
 
     useEffect(() => {
         if (typeof window === "undefined" || !window.matchMedia('(max-width: 991px)').matches) return
         setWindowLayout({
-            direction: "column",
-            first: "Equations View",
-            second: "Keypad",
-            splitPercentage: 50
+            direction: "column", first: "Equations View", second: "Keypad", splitPercentage: 50
         })
     }, []);
 
-    return (
-        <>
+    return (<>
             <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
                              secondArgLabel={"Variable"} show={showDerivativeBuilder}
                              setShow={setShowDerivativeBuilder}
@@ -247,14 +308,18 @@ export default function App({ oasis }: { oasis: any }) {
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">
                                 <NavDropdown title="File">
-                                    <NavDropdown.Item as={"button"} onClick={() => downloadXML(appState.history)}>Export as
+                                    <NavDropdown.Item as={"button"} onClick={() => downloadXML(appState.history)}>Export
+                                        as
                                         XML</NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown title="View">
                                     <NavDropdown.Item as={"button"}
-                                                      onClick={() => openMosaicWindow("Text Input")} disabled={isWindowOpen("Text Input")}>Open Text Input</NavDropdown.Item>
+                                                      onClick={() => openMosaicWindow("Text Input")}
+                                                      disabled={isWindowOpen("Text Input")}>Open Text
+                                        Input</NavDropdown.Item>
                                     <NavDropdown.Item as={"button"}
-                                                      onClick={() => openMosaicWindow("Keypad")} disabled={isWindowOpen("Keypad")}>Open Keypad</NavDropdown.Item>
+                                                      onClick={() => openMosaicWindow("Keypad")}
+                                                      disabled={isWindowOpen("Keypad")}>Open Keypad</NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown title="Functions">
                                     <NavDropdown.Item as={"button"}
@@ -285,17 +350,15 @@ export default function App({ oasis }: { oasis: any }) {
                 <Mosaic<ViewId>
                     className={"mosaic-blueprint-theme bg-light-subtle flex-grow-1"}
                     blueprintNamespace={'bp5'}
-                    renderTile={(id, path) => (
-                        <MosaicWindow<ViewId>
+                    renderTile={(id, path) => (<MosaicWindow<ViewId>
                             path={path} title={id} className={"rounded shadow border"}
-                            toolbarControls={id !== 'Equations View' ? DEFAULT_CONTROLS_WITHOUT_CREATION : React.Children.toArray([<ExpandButton />])}>
+                            toolbarControls={id !== 'Equations View' ? DEFAULT_CONTROLS_WITHOUT_CREATION : React.Children.toArray([
+                                <ExpandButton/>])}>
                             {ELEMENT_MAP[id]}
-                        </MosaicWindow>
-                    )}
+                        </MosaicWindow>)}
                     value={windowLayout}
                     onChange={newLayout => setWindowLayout(newLayout)}
                 />
             </Stack>
-        </>
-    )
+        </>)
 }
