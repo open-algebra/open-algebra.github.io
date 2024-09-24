@@ -5,6 +5,7 @@ import React, {FormEvent, ReactElement, useEffect, useState} from "react";
 import {
     DEFAULT_CONTROLS_WITHOUT_CREATION, ExpandButton, Mosaic, MosaicNode, MosaicWindow
 } from "react-mosaic-component";
+import {Draft} from "immer";
 import {useImmerReducer} from "use-immer";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
@@ -13,7 +14,6 @@ import ParseExpression from "@/app/app/app/ParseExpression";
 import Keypad from "@/app/app/app/Keypad";
 
 import "./style.scss"
-import {Draft} from "immer";
 
 interface AppState {
     history: HistoryEntry[]
@@ -81,13 +81,11 @@ interface AddErrorToHistoryAction {
 interface AppendToInputAction {
     type: 'appendToInput'
     addition: string
-    oasis: any
 }
 
 interface SetInputAction {
     type: 'setInput'
     input: string
-    oasis: any
 }
 
 interface ClearInputAction {
@@ -96,7 +94,6 @@ interface ClearInputAction {
 
 interface BackspaceInputAction {
     type: 'backspaceInput',
-    oasis: any
 }
 
 type Action =
@@ -107,56 +104,57 @@ type Action =
     | ClearInputAction
     | BackspaceInputAction;
 
-function appStateReducer(draft: Draft<AppState>, action: Action) {
-    switch (action.type) {
-        case "addToHistory": {
-            const {query, response} = action;
-            draft.history.push({query, response, error: false})
-        }
-            break;
-        case "addErrorToHistory": {
-            const {query, error} = action;
-            draft.history.push({query, response: error, error: true})
-        }
-            break;
-        case "setInput": {
-            const { oasis, input } = action
-            const newInputExpressionStr = ParseExpression(oasis, input);
-            if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
-
-            draft.currentInputText = input
-            draft.currentInputValid = newInputExpressionStr.length > 0;
-        }
-            break;
-        case "appendToInput": {
-            const { addition, oasis } = action;
-            draft.currentInputText += addition;
-            const newInputExpressionStr = ParseExpression(oasis, draft.currentInputText);
-            if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
-            draft.currentInputValid = newInputExpressionStr.length > 0;
-        }
-            break;
-        case "clearInput":
-            draft.currentInputText =  "";
-            draft.currentInputExpressionStr = "";
-            draft.currentInputValid = true;
-            break;
-        case "backspaceInput":
-            if (draft.currentInputText.length < 1) return;
-
-            const newText = draft.currentInputText.slice(0, -1);
-            const newInputExpressionStr = ParseExpression(action.oasis, newText);
-
-            draft.currentInputText = newText;
-            draft.currentInputExpressionStr = newInputExpressionStr || "";
-            draft.currentInputValid = !!newInputExpressionStr;
-            break;
-    }
-}
-
 type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
 export default function App({oasis}: { oasis: any }) {
+    function appStateReducer(draft: Draft<AppState>, action: Action) {
+        switch (action.type) {
+            case "addToHistory": {
+                const {query, response} = action;
+                draft.history.push({query, response, error: false})
+            }
+                break;
+            case "addErrorToHistory": {
+                const {query, error} = action;
+                draft.history.push({query, response: error, error: true})
+            }
+                break;
+            case "setInput": {
+                const { input } = action
+                const newInputExpressionStr = ParseExpression(oasis, input);
+                if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
+
+                draft.currentInputText = input
+                draft.currentInputValid = newInputExpressionStr.length > 0;
+            }
+                break;
+            case "appendToInput": {
+                const { addition } = action;
+                draft.currentInputText += addition;
+                const newInputExpressionStr = ParseExpression(oasis, draft.currentInputText);
+                if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
+                draft.currentInputValid = newInputExpressionStr.length > 0;
+            }
+                break;
+            case "clearInput":
+                draft.currentInputText =  "";
+                draft.currentInputExpressionStr = "";
+                draft.currentInputValid = true;
+                break;
+            case "backspaceInput": {
+                if (draft.currentInputText.length < 1) return;
+
+                const newText = draft.currentInputText.slice(0, -1);
+                const newInputExpressionStr = ParseExpression(oasis, newText);
+
+                draft.currentInputText = newText;
+                draft.currentInputExpressionStr = newInputExpressionStr || "";
+                draft.currentInputValid = !!newInputExpressionStr;
+            }
+                break;
+        }
+    }
+
     const [appState, dispatch] = useImmerReducer(appStateReducer, {
         history: [],
         currentInputText: "",
@@ -184,11 +182,11 @@ export default function App({oasis}: { oasis: any }) {
     }
 
     function appendToInput(addition: string) {
-        dispatch({ type: 'appendToInput', addition, oasis });
+        dispatch({ type: 'appendToInput', addition });
     }
 
     function onTextInputUpdate(input: string) {
-        dispatch({ type: 'setInput', input, oasis });
+        dispatch({ type: 'setInput', input });
     }
 
     function clearTextInput() {
@@ -196,7 +194,7 @@ export default function App({oasis}: { oasis: any }) {
     }
 
     function backspaceTextInput() {
-        dispatch({ type: 'backspaceInput', oasis });
+        dispatch({ type: 'backspaceInput' });
     }
 
     function closeHelp() {
