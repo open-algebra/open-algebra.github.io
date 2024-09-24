@@ -1,12 +1,6 @@
 import {FormEvent, useRef, useState} from "react";
 import {Button, Col, Form, Modal, Row, Stack} from "react-bootstrap";
 
-export interface LiftedFunctionBuilderState
-{
-    show: boolean
-    result: string
-}
-
 interface FunctionBuilderProps {
     title: string
     func: string
