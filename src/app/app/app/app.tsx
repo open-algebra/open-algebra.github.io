@@ -208,7 +208,7 @@ export default function App({oasis}: { oasis: any }) {
 
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
         "Equations View": <EquationsView history={appState.history}
-                                         currentInputExpressionStr={appState.currentInputExpressionStr} oasis={oasis}/>,
+                                         currentInputExpressionStr={appState.currentInputExpressionStr} />,
         "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate}
                                  currentText={appState.currentInputText} invalid={!appState.currentInputValid}/>,
         "Keypad": <Keypad currentInputText={appState.currentInputText} valid={appState.currentInputValid}
