@@ -1,5 +1,6 @@
-import {FormEvent, useRef, useState} from "react";
+import {FormEvent, useContext, useRef, useState} from "react";
 import {Button, Col, Form, Modal, Row, Stack} from "react-bootstrap";
+import {AppStateDispatchContext} from "@/app/app/app/AppStateContext";
 
 interface FunctionBuilderProps {
     title: string
@@ -8,7 +9,6 @@ interface FunctionBuilderProps {
     secondArgLabel: string
     show: boolean,
     setShow: (show: boolean) => void
-    setResult: (value: string) => void
     oasis: any
 }
 
@@ -19,10 +19,10 @@ export default function FunctionBuilder({
                                             secondArgLabel,
                                             show,
                                             setShow,
-                                            setResult,
                                             oasis
                                         }: FunctionBuilderProps) {
     const [currentEntry, setCurrentEntry] = useState(0);
+    const dispatch = useContext(AppStateDispatchContext);
     const firstArgRef = useRef<HTMLInputElement>(null);
     const secondArgRef = useRef<HTMLInputElement>(null);
 
@@ -49,7 +49,9 @@ export default function FunctionBuilder({
 
         const composedFunction = `${func}(${firstArgRef.current.value},${secondArgRef.current.value})`
 
-        setResult(composedFunction);
+        if (!dispatch) return;
+        dispatch({ type: 'appendToInput', addition: composedFunction })
+
         setShow(false);
     }
 

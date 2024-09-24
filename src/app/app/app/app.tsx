@@ -225,16 +225,13 @@ export default function App({oasis}: { oasis: any }) {
         <AppStateDispatchContext.Provider value={dispatch}>
             <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
                              secondArgLabel={"Variable"} show={showDerivativeBuilder}
-                             setShow={setShowDerivativeBuilder}
-                             setResult={appendToInput} oasis={oasis!}/>
+                             setShow={setShowDerivativeBuilder} oasis={oasis!}/>
             <FunctionBuilder title={"Integral Builder"} func={"in"} firstArgLabel={"Argument"}
                              secondArgLabel={"Variable"} show={showIntegralBuilder}
-                             setShow={setShowIntegralBuilder}
-                             setResult={appendToInput} oasis={oasis!}/>
+                             setShow={setShowIntegralBuilder} oasis={oasis!}/>
             <FunctionBuilder title={"Logarithm Builder"} func={"log"} firstArgLabel={"Base"}
                              secondArgLabel={"Argument"} show={showLogBuilder}
-                             setShow={setShowLogBuilder}
-                             setResult={appendToInput} oasis={oasis!}/>
+                             setShow={setShowLogBuilder} oasis={oasis!}/>
             <Modal show={showHelp} onHide={closeHelp}>
                 <Modal.Header closeButton>
                     <Modal.Title>Help</Modal.Title>
