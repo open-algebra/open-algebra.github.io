@@ -1,11 +1,6 @@
 import {Alert, Container, Stack} from "react-bootstrap";
 import {useEffect, useRef, useState} from "react";
-
-export interface HistoryEntry {
-    query: string,
-    response: string
-    error: boolean
-}
+import {HistoryEntry} from "@/app/app/app/AppStateContext";
 
 interface EquationsViewProps {
     history: HistoryEntry[]

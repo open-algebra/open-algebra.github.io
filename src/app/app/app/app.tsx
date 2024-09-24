@@ -7,20 +7,14 @@ import {
 } from "react-mosaic-component";
 import {Draft} from "immer";
 import {useImmerReducer} from "use-immer";
+import {Action, AppState, AppStateContext, AppStateDispatchContext, HistoryEntry} from "@/app/app/app/AppStateContext";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
-import EquationsView, {HistoryEntry} from "@/app/app/app/EquationsView";
+import EquationsView from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
 import ParseExpression from "@/app/app/app/ParseExpression";
 import Keypad from "@/app/app/app/Keypad";
 
 import "./style.scss"
-
-interface AppState {
-    history: HistoryEntry[]
-    currentInputText: string
-    currentInputExpressionStr: string
-    currentInputValid: boolean
-}
 
 function downloadXML(history: HistoryEntry[]) {
 
@@ -65,44 +59,6 @@ function downloadXML(history: HistoryEntry[]) {
     const url = URL.createObjectURL(blob);
     window.open(url);
 }
-
-interface AddToHistoryAction {
-    type: 'addToHistory'
-    query: string,
-    response: string
-}
-
-interface AddErrorToHistoryAction {
-    type: 'addErrorToHistory'
-    query: string,
-    error: string
-}
-
-interface AppendToInputAction {
-    type: 'appendToInput'
-    addition: string
-}
-
-interface SetInputAction {
-    type: 'setInput'
-    input: string
-}
-
-interface ClearInputAction {
-    type: 'clearInput'
-}
-
-interface BackspaceInputAction {
-    type: 'backspaceInput',
-}
-
-type Action =
-    AddToHistoryAction
-    | AddErrorToHistoryAction
-    | AppendToInputAction
-    | SetInputAction
-    | ClearInputAction
-    | BackspaceInputAction;
 
 type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
@@ -267,7 +223,8 @@ export default function App({oasis}: { oasis: any }) {
         })
     }, []);
 
-    return (<>
+    return (<AppStateContext.Provider value={appState}>
+        <AppStateDispatchContext.Provider value={dispatch}>
             <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
                              secondArgLabel={"Variable"} show={showDerivativeBuilder}
                              setShow={setShowDerivativeBuilder}
@@ -358,5 +315,6 @@ export default function App({oasis}: { oasis: any }) {
                     onChange={newLayout => setWindowLayout(newLayout)}
                 />
             </Stack>
-        </>)
+        </AppStateDispatchContext.Provider>
+        </AppStateContext.Provider>)
 }
