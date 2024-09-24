@@ -10,7 +10,6 @@ export interface HistoryEntry {
 interface EquationsViewProps {
     history: HistoryEntry[]
     currentInputExpressionStr: string
-    oasis: any
 }
 
 export default function EquationsView({ history, currentInputExpressionStr}: EquationsViewProps) {
