@@ -1,14 +1,10 @@
 import {Alert, Container, Stack} from "react-bootstrap";
-import {useEffect, useRef, useState} from "react";
-import {HistoryEntry} from "@/app/app/app/AppStateContext";
+import {useContext, useEffect, useRef, useState} from "react";
+import {AppStateContext} from "@/app/app/app/AppStateContext";
 
-interface EquationsViewProps {
-    history: HistoryEntry[]
-    currentInputExpressionStr: string
-}
-
-export default function EquationsView({history, currentInputExpressionStr}: EquationsViewProps) {
+export default function EquationsView() {
     const [showInDevWarning, setShowInDevWarning] = useState(true);
+    const {history, currentInputExpressionStr} = useContext(AppStateContext)
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

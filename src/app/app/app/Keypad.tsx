@@ -1,5 +1,6 @@
 import {Button, Col, FormControl, Row, Stack} from "react-bootstrap";
-import {ReactNode} from "react";
+import {ReactNode, useContext} from "react";
+import {AppStateContext} from "@/app/app/app/AppStateContext";
 
 interface KeypadProps {
     currentInputText: string;
@@ -43,9 +44,11 @@ const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-k
     [".", <mi>.</mi>], // eslint-disable-next-line react/jsx-key
     ["(-", <mi>(-)</mi>]])
 
-export default function Keypad({currentInputText, valid, onKeyDown, onBackspace, onClear, onSubmit}: KeypadProps) {
+export default function Keypad({onKeyDown, onBackspace, onClear, onSubmit}: KeypadProps) {
+    const {currentInputText, currentInputValid} = useContext(AppStateContext);
+
     return (<Stack gap={2} className={"h-100 px-2 pt-2"}>
-            <FormControl placeholder={"Enter an expression..."} value={currentInputText} isInvalid={!valid} readOnly/>
+            <FormControl placeholder={"Enter an expression..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
             <Row xs={4} className={"pb-2 g-2 flex-grow-1 overflow-y-scroll"}>
                 <Col>
                     <Button variant={"light"} className={"w-100 h-100 border"} onClick={onClear}>Clear</Button>
@@ -60,7 +63,7 @@ export default function Keypad({currentInputText, valid, onKeyDown, onBackspace,
                         </Button>
                     </Col>))}
                 <Col>
-                    <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!valid}>Submit</Button>
+                    <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}>Submit</Button>
                 </Col>
             </Row>
         </Stack>)

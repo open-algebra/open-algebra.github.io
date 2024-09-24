@@ -1,15 +1,15 @@
-import {FormEventHandler, useRef, KeyboardEvent} from "react";
+import {FormEventHandler, useRef, KeyboardEvent, useContext} from "react";
 import {Button, Form, Stack} from "react-bootstrap";
+import {AppStateContext} from "@/app/app/app/AppStateContext";
 
 
 interface TextInputProps {
     onSubmit: FormEventHandler<HTMLFormElement>
-    currentText: string
     setCurrentText: (text: string) => void
-    invalid: boolean
 }
 
-export default function TextInput({ onSubmit, currentText, setCurrentText, invalid }: TextInputProps) {
+export default function TextInput({ onSubmit, setCurrentText }: TextInputProps) {
+    const { currentInputText, currentInputValid } = useContext(AppStateContext)
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -34,15 +34,15 @@ export default function TextInput({ onSubmit, currentText, setCurrentText, inval
                         className={"flex-grow-1"}
                         ref={inputRef}
                         placeholder="Enter an expression..."
-                        isInvalid={invalid}
+                        isInvalid={!currentInputValid}
                         onChange={onChange}
                         onKeyDown={onEnterPress}
-                        value={currentText}
+                        value={currentInputText}
                     />
                     <Button
                         variant="primary"
                         type={"submit"}
-                        disabled={invalid}
+                        disabled={!currentInputValid}
                     >Submit</Button>
                 </Stack>
             </Form>
