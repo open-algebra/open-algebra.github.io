@@ -1,10 +1,13 @@
-import {useRef, KeyboardEvent, useContext, FormEvent} from "react";
+import {useRef, KeyboardEvent, FormEvent} from "react";
 import {Button, Form, Stack} from "react-bootstrap";
-import {AppStateContext, AppStateDispatchContext} from "@/app/app/app/AppStateContext";
+import {
+    useAppState,
+    useAppStateDispatch
+} from "@/app/app/app/AppStateContext";
 
 export default function TextInput() {
-    const { currentInputText, currentInputValid } = useContext(AppStateContext)
-    const dispatch = useContext(AppStateDispatchContext)
+    const { currentInputText, currentInputValid } = useAppState();
+    const dispatch = useAppStateDispatch();
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
 

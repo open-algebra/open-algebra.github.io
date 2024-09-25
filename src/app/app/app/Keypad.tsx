@@ -1,6 +1,9 @@
 import {Button, Col, FormControl, Row, Stack} from "react-bootstrap";
-import {FormEvent, ReactNode, useContext} from "react";
-import {AppStateContext, AppStateDispatchContext} from "@/app/app/app/AppStateContext";
+import {FormEvent, ReactNode} from "react";
+import {
+    useAppState,
+    useAppStateDispatch
+} from "@/app/app/app/AppStateContext";
 
 const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-key
     ["dd(", <mfrac>
@@ -36,8 +39,8 @@ const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-k
     ["(-", <mi>(-)</mi>]])
 
 export default function Keypad() {
-    const {currentInputText, currentInputValid} = useContext(AppStateContext);
-    const dispatch = useContext(AppStateDispatchContext);
+    const {currentInputText, currentInputValid} = useAppState();
+    const dispatch = useAppStateDispatch();
 
     function appendToInput(addition: string) {
         dispatch && dispatch({ type: 'appendToInput', addition });

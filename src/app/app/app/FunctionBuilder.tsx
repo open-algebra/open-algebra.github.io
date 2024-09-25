@@ -1,6 +1,6 @@
-import {FormEvent, useContext, useRef, useState} from "react";
+import {FormEvent, useRef, useState} from "react";
 import {Button, Col, Form, Modal, Row, Stack} from "react-bootstrap";
-import {AppStateDispatchContext} from "@/app/app/app/AppStateContext";
+import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
 
 interface FunctionBuilderProps {
     title: string
@@ -22,7 +22,7 @@ export default function FunctionBuilder({
                                             oasis
                                         }: FunctionBuilderProps) {
     const [currentEntry, setCurrentEntry] = useState(0);
-    const dispatch = useContext(AppStateDispatchContext);
+    const dispatch = useAppStateDispatch();
     const firstArgRef = useRef<HTMLInputElement>(null);
     const secondArgRef = useRef<HTMLInputElement>(null);
 

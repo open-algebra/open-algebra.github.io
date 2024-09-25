@@ -1,4 +1,4 @@
-import {createContext, Dispatch, ReactNode} from "react";
+import {createContext, Dispatch, ReactNode, useContext} from "react";
 import {Draft} from "immer";
 import ParseExpression from "@/app/app/app/ParseExpression";
 import {useImmerReducer} from "use-immer";
@@ -46,6 +46,14 @@ export type Action = SubmitEntryAction | AppendToInputAction | SetInputAction | 
 
 export const AppStateContext = createContext<AppState>(defaultAppState);
 export const AppStateDispatchContext = createContext<Dispatch<Action> | null>(null);
+
+export function useAppState() {
+    return useContext(AppStateContext);
+}
+
+export function useAppStateDispatch() {
+    return useContext(AppStateDispatchContext);
+}
 
 export function AppStateProvider({children, oasis}: { children: ReactNode, oasis: any }) {
     function appStateReducer(draft: Draft<AppState>, action: Action) {
