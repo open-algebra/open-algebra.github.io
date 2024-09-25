@@ -51,7 +51,7 @@ export default function FunctionBuilder({
                 </Stack>
                 <Form onSubmit={onSubmit}>
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="2">
+                        <Form.Label column={true} sm="2">
                             {firstArgLabel}
                         </Form.Label>
                         <Col sm="10">
@@ -59,7 +59,7 @@ export default function FunctionBuilder({
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="2">
+                        <Form.Label column={true} sm="2">
                             {secondArgLabel}
                         </Form.Label>
                         <Col sm="10">
