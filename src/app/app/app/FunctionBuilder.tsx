@@ -1,4 +1,4 @@
-import {FormEvent, useRef, useState} from "react";
+import {ChangeEvent, FormEvent, useState} from "react";
 import {Button, Col, Form, Modal, ModalProps, Row, Stack} from "react-bootstrap";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
 
@@ -11,50 +11,33 @@ interface FunctionBuilderProps {
 }
 
 export default function FunctionBuilder({
-                                            title,
-                                            func,
-                                            firstArgLabel,
-                                            secondArgLabel,
-                                            oasis,
-                                            onHide,
-                                            ...props
+                                            title, func, firstArgLabel, secondArgLabel, oasis, onHide, ...props
                                         }: FunctionBuilderProps & ModalProps) {
-    const [currentEntry, setCurrentEntry] = useState(0);
+    const [firstArg, setFirstArg] = useState("");
+    const [secondArg, setSecondArg] = useState("");
     const dispatch = useAppStateDispatch();
-    const firstArgRef = useRef<HTMLInputElement>(null);
-    const secondArgRef = useRef<HTMLInputElement>(null);
 
-    function onUpdate() {
-        if (!firstArgRef.current) return;
-        if (!secondArgRef.current) return;
+    let currentEntry = null;
 
-        const composedFunction = `${func}(${firstArgRef.current.value},${secondArgRef.current.value})`
+    const composedFunction = `${func} (${firstArg},${secondArg})`
+    const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [composedFunction]);
 
-        const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [composedFunction]);
-        const expression = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
-
-        if (currentEntry) {
-            oasis.ccall('Oa_Free','void', ['number'], [currentEntry]);
-        }
-        setCurrentEntry(expression)
+    if (firstArg && secondArg) {
+        const currentEntryExpr = (firstArg && secondArg) ? oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]) : 0;
+        currentEntry = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntryExpr]);
+        if (currentEntryExpr) oasis.ccall('Oa_Free', 'void', ['number'], [currentEntryExpr]);
     }
 
     function onSubmit(e: FormEvent) {
         e.preventDefault();
 
-        if (!firstArgRef.current) return;
-        if (!secondArgRef.current) return;
-
-        const composedFunction = `${func}(${firstArgRef.current.value},${secondArgRef.current.value})`
-
         if (!dispatch) return;
-        dispatch({ type: 'appendToInput', addition: composedFunction })
+        dispatch({type: 'appendToInput', addition: composedFunction})
 
         onHide && onHide();
     }
 
-    return (
-        <Modal onHide={onHide} {...props}>
+    return (<Modal onHide={onHide} {...props}>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
@@ -62,7 +45,7 @@ export default function FunctionBuilder({
                 <Stack direction="horizontal" className="justify-content-center py-5">
                     {currentEntry
                         ? <math display={"block"}
-                                dangerouslySetInnerHTML={{__html: oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntry])}}></math>
+                                dangerouslySetInnerHTML={{__html: currentEntry}}></math>
                         : "Failed to parse expression"}
 
                 </Stack>
@@ -72,7 +55,7 @@ export default function FunctionBuilder({
                             {firstArgLabel}
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control ref={firstArgRef} onChange={onUpdate}/>
+                            <Form.Control onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstArg(e.target.value)}/>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
@@ -80,7 +63,8 @@ export default function FunctionBuilder({
                             {secondArgLabel}
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control ref={secondArgRef} onChange={onUpdate}/>
+                            <Form.Control
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setSecondArg(e.target.value)}/>
                         </Col>
                     </Form.Group>
                     <Button
@@ -90,6 +74,5 @@ export default function FunctionBuilder({
                     >Submit</Button>
                 </Form>
             </Modal.Body>
-        </Modal>
-    )
+        </Modal>)
 }
