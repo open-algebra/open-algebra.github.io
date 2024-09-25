@@ -11,6 +11,7 @@ import EquationsView from "@/app/app/app/EquationsView";
 import TextInput from "@/app/app/app/TextInput";
 import Keypad from "@/app/app/app/Keypad";
 import DownloadXMLButton from "@/app/app/app/DownloadXMLButton";
+import DerivativeBuilder from "@/app/app/app/DerivativeBuilder";
 
 import "./style.scss"
 
@@ -64,15 +65,14 @@ export default function App({oasis}: { oasis: any }) {
     }, []);
 
     return (<AppStateProvider oasis={oasis}>
-        <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
-                         secondArgLabel={"Variable"} show={showDerivativeBuilder}
+        <DerivativeBuilder show={showDerivativeBuilder}
                          onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
         <FunctionBuilder title={"Integral Builder"} func={"in"} firstArgLabel={"Argument"}
                          secondArgLabel={"Variable"} show={showIntegralBuilder}
-                         onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
+                         onHide={() => setShowIntegralBuilder(false)} oasis={oasis!}/>
         <FunctionBuilder title={"Logarithm Builder"} func={"log"} firstArgLabel={"Base"}
                          secondArgLabel={"Argument"} show={showLogBuilder}
-                         onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
+                         onHide={() => setShowLogBuilder(false)} oasis={oasis!}/>
         <Modal show={showHelp} onHide={closeHelp}>
             <Modal.Header closeButton>
                 <Modal.Title>Help</Modal.Title>
