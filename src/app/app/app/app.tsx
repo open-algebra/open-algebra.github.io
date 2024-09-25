@@ -66,13 +66,13 @@ export default function App({oasis}: { oasis: any }) {
     return (<AppStateProvider oasis={oasis}>
         <FunctionBuilder title={"Derivative Builder"} func={"dd"} firstArgLabel={"Argument"}
                          secondArgLabel={"Variable"} show={showDerivativeBuilder}
-                         setShow={setShowDerivativeBuilder} oasis={oasis!}/>
+                         onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
         <FunctionBuilder title={"Integral Builder"} func={"in"} firstArgLabel={"Argument"}
                          secondArgLabel={"Variable"} show={showIntegralBuilder}
-                         setShow={setShowIntegralBuilder} oasis={oasis!}/>
+                         onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
         <FunctionBuilder title={"Logarithm Builder"} func={"log"} firstArgLabel={"Base"}
                          secondArgLabel={"Argument"} show={showLogBuilder}
-                         setShow={setShowLogBuilder} oasis={oasis!}/>
+                         onHide={() => setShowDerivativeBuilder(false)} oasis={oasis!}/>
         <Modal show={showHelp} onHide={closeHelp}>
             <Modal.Header closeButton>
                 <Modal.Title>Help</Modal.Title>

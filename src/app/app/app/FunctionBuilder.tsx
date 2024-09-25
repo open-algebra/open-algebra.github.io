@@ -1,5 +1,5 @@
 import {FormEvent, useRef, useState} from "react";
-import {Button, Col, Form, Modal, Row, Stack} from "react-bootstrap";
+import {Button, Col, Form, Modal, ModalProps, Row, Stack} from "react-bootstrap";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
 
 interface FunctionBuilderProps {
@@ -7,8 +7,6 @@ interface FunctionBuilderProps {
     func: string
     firstArgLabel: string
     secondArgLabel: string
-    show: boolean,
-    setShow: (show: boolean) => void
     oasis: any
 }
 
@@ -17,10 +15,10 @@ export default function FunctionBuilder({
                                             func,
                                             firstArgLabel,
                                             secondArgLabel,
-                                            show,
-                                            setShow,
-                                            oasis
-                                        }: FunctionBuilderProps) {
+                                            oasis,
+                                            onHide,
+                                            ...props
+                                        }: FunctionBuilderProps & ModalProps) {
     const [currentEntry, setCurrentEntry] = useState(0);
     const dispatch = useAppStateDispatch();
     const firstArgRef = useRef<HTMLInputElement>(null);
@@ -52,15 +50,11 @@ export default function FunctionBuilder({
         if (!dispatch) return;
         dispatch({ type: 'appendToInput', addition: composedFunction })
 
-        setShow(false);
+        onHide && onHide();
     }
 
     return (
-        <Modal
-            show={show}
-            onHide={() => {
-                setShow(false);
-            }}>
+        <Modal onHide={onHide} {...props}>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
