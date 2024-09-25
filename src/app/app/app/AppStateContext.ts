@@ -20,16 +20,8 @@ export const defaultAppState = {
     currentInputValid: true
 }
 
-interface AddToHistoryAction {
-    type: 'addToHistory'
-    query: string,
-    response: string
-}
-
-interface AddErrorToHistoryAction {
-    type: 'addErrorToHistory'
-    query: string,
-    error: string
+interface SubmitEntryAction {
+    type: 'submitEntry'
 }
 
 interface AppendToInputAction {
@@ -51,8 +43,7 @@ interface BackspaceInputAction {
 }
 
 export type Action =
-    AddToHistoryAction
-    | AddErrorToHistoryAction
+    SubmitEntryAction
     | AppendToInputAction
     | SetInputAction
     | ClearInputAction

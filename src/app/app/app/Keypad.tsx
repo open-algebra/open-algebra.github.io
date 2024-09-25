@@ -1,15 +1,6 @@
 import {Button, Col, FormControl, Row, Stack} from "react-bootstrap";
-import {ReactNode, useContext} from "react";
-import {AppStateContext} from "@/app/app/app/AppStateContext";
-
-interface KeypadProps {
-    currentInputText: string;
-    valid: boolean
-    onKeyDown: (e: string) => void;
-    onBackspace: () => void;
-    onClear: () => void;
-    onSubmit: () => void;
-}
+import {FormEvent, ReactNode, useContext} from "react";
+import {AppStateContext, AppStateDispatchContext} from "@/app/app/app/AppStateContext";
 
 const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-key
     ["dd(", <mfrac>
@@ -44,21 +35,39 @@ const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-k
     [".", <mi>.</mi>], // eslint-disable-next-line react/jsx-key
     ["(-", <mi>(-)</mi>]])
 
-export default function Keypad({onKeyDown, onBackspace, onClear, onSubmit}: KeypadProps) {
+export default function Keypad() {
     const {currentInputText, currentInputValid} = useContext(AppStateContext);
+    const dispatch = useContext(AppStateDispatchContext);
+
+    function appendToInput(addition: string) {
+        dispatch && dispatch({ type: 'appendToInput', addition });
+    }
+
+    function clearTextInput() {
+        dispatch && dispatch({ type: 'clearInput' });
+    }
+
+    function backspaceTextInput() {
+        dispatch && dispatch({ type: 'backspaceInput' });
+    }
+
+    function onSubmit(e?: FormEvent) {
+        if (e) e.preventDefault();
+        dispatch && dispatch({ type: 'submitEntry' })
+    }
 
     return (<Stack gap={2} className={"h-100 px-2 pt-2"}>
             <FormControl placeholder={"Enter an expression..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
             <Row xs={4} className={"pb-2 g-2 flex-grow-1 overflow-y-scroll"}>
                 <Col>
-                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={onClear}>Clear</Button>
+                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={clearTextInput}>Clear</Button>
                 </Col>
                 <Col>
-                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={onBackspace}><i
+                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={backspaceTextInput}><i
                         className={"bi-backspace"}/></Button>
                 </Col>
                 {Array.from(KEYS.keys()).map((key, i) => (<Col key={i}>
-                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={() => onKeyDown(key)}>
+                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={() => appendToInput(key)}>
                             <math display={"block"}>{KEYS.get(key)}</math>
                         </Button>
                     </Col>))}

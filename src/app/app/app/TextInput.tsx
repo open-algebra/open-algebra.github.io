@@ -1,15 +1,10 @@
-import {FormEventHandler, useRef, KeyboardEvent, useContext} from "react";
+import {useRef, KeyboardEvent, useContext, FormEvent} from "react";
 import {Button, Form, Stack} from "react-bootstrap";
-import {AppStateContext} from "@/app/app/app/AppStateContext";
+import {AppStateContext, AppStateDispatchContext} from "@/app/app/app/AppStateContext";
 
-
-interface TextInputProps {
-    onSubmit: FormEventHandler<HTMLFormElement>
-    setCurrentText: (text: string) => void
-}
-
-export default function TextInput({ onSubmit, setCurrentText }: TextInputProps) {
+export default function TextInput() {
     const { currentInputText, currentInputValid } = useContext(AppStateContext)
+    const dispatch = useContext(AppStateDispatchContext)
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -20,9 +15,14 @@ export default function TextInput({ onSubmit, setCurrentText }: TextInputProps) 
         }
     }
 
+    function onSubmit(e?: FormEvent) {
+        if (e) e.preventDefault();
+        dispatch && dispatch({ type: 'submitEntry' })
+    }
+
     function onChange() {
         if (!inputRef.current) { return; }
-        setCurrentText(inputRef.current.value);
+        dispatch && dispatch({ type: 'setInput', input: inputRef.current.value });
     }
 
     return (

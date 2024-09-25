@@ -65,6 +65,36 @@ type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 export default function App({oasis}: { oasis: any }) {
     function appStateReducer(draft: Draft<AppState>, action: Action) {
         switch (action.type) {
+            case "submitEntry": {
+                const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [draft.currentInputText]);
+                const query = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
+
+                if (!query) return;
+
+                const queryStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [query])
+
+                let result;
+                try {
+                    result = oasis.ccall('Oa_SimplifyNF', 'number', ['number'], [query]);
+                } catch (error) {
+                    draft.history.push({query: queryStr, response: (error as Error).message, error: true})
+                    draft.currentInputText =  "";
+                    draft.currentInputExpressionStr = "";
+                    draft.currentInputValid = true;
+                    return;
+                }
+
+                const resultStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [result])
+
+                oasis.ccall('Oa_Free', 'void', ['number'], [result]);
+                oasis.ccall('Oa_Free', 'void', ['number'], [query]);
+
+                draft.history.push({query: queryStr, response: resultStr, error: false})
+                draft.currentInputText =  "";
+                draft.currentInputExpressionStr = "";
+                draft.currentInputValid = true;
+            }
+                break;
             case "addToHistory": {
                 const {query, response} = action;
                 draft.history.push({query, response, error: false})
@@ -127,62 +157,8 @@ export default function App({oasis}: { oasis: any }) {
         }, splitPercentage: 75
     })
 
-    function addToHistory(query: string, response: string) {
-        dispatch({ type: 'addToHistory', query, response });
-        dispatch({ type: 'clearInput' });
-    }
-
-    function addErrorToHistory(query: string, error: string) {
-        dispatch({ type: 'addErrorToHistory', query, error });
-        dispatch({ type: 'clearInput' });
-    }
-
-    function appendToInput(addition: string) {
-        dispatch({ type: 'appendToInput', addition });
-    }
-
-    function onTextInputUpdate(input: string) {
-        dispatch({ type: 'setInput', input });
-    }
-
-    function clearTextInput() {
-        dispatch({ type: 'clearInput' });
-    }
-
-    function backspaceTextInput() {
-        dispatch({ type: 'backspaceInput' });
-    }
-
     function closeHelp() {
         setShowHelp(false)
-    }
-
-    function onSubmit(e?: FormEvent) {
-        if (e) e.preventDefault();
-
-        if (!oasis) return;
-
-        const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [appState.currentInputText]);
-        const query = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
-
-        if (!query) return;
-
-        const queryStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [query])
-
-        let result;
-        try {
-            result = oasis.ccall('Oa_SimplifyNF', 'number', ['number'], [query]);
-        } catch (error) {
-            addErrorToHistory(queryStr, (error as Error).message)
-            return;
-        }
-
-        const resultStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [result])
-
-        oasis.ccall('Oa_Free', 'void', ['number'], [result]);
-        oasis.ccall('Oa_Free', 'void', ['number'], [query]);
-
-        addToHistory(queryStr, resultStr);
     }
 
     function openMosaicWindow(viewId: ViewId) {
@@ -208,10 +184,8 @@ export default function App({oasis}: { oasis: any }) {
 
     const ELEMENT_MAP: Record<ViewId, ReactElement> = {
         "Equations View": <EquationsView />,
-        "Text Input": <TextInput onSubmit={onSubmit} setCurrentText={onTextInputUpdate} />,
-        "Keypad": <Keypad currentInputText={appState.currentInputText} valid={appState.currentInputValid}
-                          onKeyDown={(key: string) => appendToInput(key)} onClear={clearTextInput}
-                          onBackspace={backspaceTextInput} onSubmit={onSubmit}/>
+        "Text Input": <TextInput />,
+        "Keypad": <Keypad />
     };
 
     useEffect(() => {
