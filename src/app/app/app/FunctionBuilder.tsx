@@ -19,13 +19,15 @@ export default function FunctionBuilder({
 
     let currentEntry = null;
 
-    const composedFunction = `${func} (${firstArg},${secondArg})`
+    const composedFunction = `${func}(${firstArg},${secondArg})`
     const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [composedFunction]);
 
     if (firstArg && secondArg) {
         const currentEntryExpr = (firstArg && secondArg) ? oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]) : 0;
-        currentEntry = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntryExpr]);
-        if (currentEntryExpr) oasis.ccall('Oa_Free', 'void', ['number'], [currentEntryExpr]);
+        if (currentEntryExpr) {
+            currentEntry = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntryExpr]);
+            oasis.ccall('Oa_Free', 'void', ['number'], [currentEntryExpr]);
+        }
     }
 
     function onSubmit(e: FormEvent) {
