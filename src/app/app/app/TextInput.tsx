@@ -1,4 +1,4 @@
-import {useRef, KeyboardEvent, FormEvent} from "react";
+import {useRef, KeyboardEvent, FormEvent, ChangeEvent} from "react";
 import {Button, Form, Stack} from "react-bootstrap";
 import {
     useAppState,
@@ -8,7 +8,6 @@ import {
 export default function TextInput() {
     const { currentInputText, currentInputValid } = useAppState();
     const dispatch = useAppStateDispatch();
-    const inputRef = useRef<HTMLTextAreaElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
     function onEnterPress(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -23,9 +22,8 @@ export default function TextInput() {
         dispatch && dispatch({ type: 'submitEntry' })
     }
 
-    function onChange() {
-        if (!inputRef.current) { return; }
-        dispatch && dispatch({ type: 'setInput', input: inputRef.current.value });
+    function onChange(e: ChangeEvent<HTMLTextAreaElement>) {
+        dispatch && dispatch({ type: 'setInput', input: e.target.value });
     }
 
     return (
@@ -35,7 +33,6 @@ export default function TextInput() {
                     <Form.Control
                         as={"textarea"}
                         className={"flex-grow-1"}
-                        ref={inputRef}
                         placeholder="Enter an expression..."
                         isInvalid={!currentInputValid}
                         onChange={onChange}
