@@ -2,10 +2,14 @@
 @import "bootstrap-icons/font/bootstrap-icons";
 @import "react-mosaic-component/react-mosaic-component.css";
 
-@import "@blueprintjs/core/lib/css/blueprint.css";
+//@import "@blueprintjs/core/lib/css/blueprint.css";
 
 .mosaic-window {
   .mosaic-window-controls {
+    button {
+      @extend .btn, .btn-sm;
+    }
+
     .expand-button {
       @extend .bi, .bi-arrows-angle-expand;
     }
