@@ -1,7 +1,7 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Button, Col, Form, FormControl, Modal, ModalProps, Row, Stack} from "react-bootstrap";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
-import {MainModule} from "oasis";
+import {MainModule} from "@open-algebra/oasis/oasis-web";
 
 interface DerivativeBuilderProps {
     oasis: MainModule
