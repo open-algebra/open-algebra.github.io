@@ -1,13 +1,14 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Button, Col, Form, Modal, ModalProps, Row, Stack} from "react-bootstrap";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
+import {MainModule} from "@open-algebra/oasis/oasis-web";
 
 interface FunctionBuilderProps {
     title: string
     func: string
     firstArgLabel: string
     secondArgLabel: string
-    oasis: any
+    oasis: MainModule
 }
 
 export default function FunctionBuilder({
@@ -20,14 +21,11 @@ export default function FunctionBuilder({
     let currentEntry = null;
 
     const composedFunction = `${func}(${firstArg},${secondArg})`
-    const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [composedFunction]);
+    const preprocessedInput = oasis.PreProcessInFix(composedFunction);
 
     if (firstArg && secondArg) {
-        const currentEntryExpr = (firstArg && secondArg) ? oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]) : 0;
-        if (currentEntryExpr) {
-            currentEntry = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntryExpr]);
-            oasis.ccall('Oa_Free', 'void', ['number'], [currentEntryExpr]);
-        }
+        const currentEntryExpr = (firstArg && secondArg) ? oasis.FromInFix(preprocessedInput) : 0;
+        if (currentEntryExpr) currentEntry = oasis.ToMathMLString(currentEntryExpr);
     }
 
     function onSubmit(e: FormEvent) {

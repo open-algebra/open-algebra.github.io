@@ -1,13 +1,12 @@
-export default function ParseExpression(oasis: any, expression: string): string {
-    const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [expression]);
-    const currentInputExpression = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
+import {MainModule} from "@open-algebra/oasis/oasis-web";
+
+export default function ParseExpression(oasis: MainModule, expression: string): string {
+    const preprocessedInput = oasis.PreProcessInFix(expression);
+    const currentInputExpression = oasis.FromInFix(preprocessedInput);
 
     if (!currentInputExpression) {
         return "";
     }
 
-    const currentInputExpressionStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentInputExpression])
-    oasis.ccall('Oa_Free', 'void', ['number'], [currentInputExpression]);
-
-    return currentInputExpressionStr;
+    return oasis.ToMathMLString(currentInputExpression);
 }

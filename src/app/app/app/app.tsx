@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Container, Modal, Nav, Navbar, NavDropdown, Stack
 } from "react-bootstrap";
@@ -14,10 +16,11 @@ import DownloadXMLButton from "@/app/app/app/DownloadXMLButton";
 import DerivativeBuilder from "@/app/app/app/DerivativeBuilder";
 
 import "./style.scss"
+import {MainModule} from "@open-algebra/oasis/oasis-web";
 
 type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
-export default function App({oasis}: { oasis: any }) {
+export default function App({oasis}: { oasis: MainModule }) {
     const [showHelp, setShowHelp] = useState(false);
     const [showDerivativeBuilder, setShowDerivativeBuilder] = useState(false);
     const [showIntegralBuilder, setShowIntegralBuilder] = useState(false);

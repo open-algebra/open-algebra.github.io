@@ -2,6 +2,7 @@ import {createContext, Dispatch, ReactNode, useContext} from "react";
 import {Draft} from "immer";
 import ParseExpression from "@/app/app/app/ParseExpression";
 import {useImmerReducer} from "use-immer";
+import {MainModule} from "oasis";
 
 export interface HistoryEntry {
     query: string,
@@ -55,20 +56,20 @@ export function useAppStateDispatch() {
     return useContext(AppStateDispatchContext);
 }
 
-export function AppStateProvider({children, oasis}: { children: ReactNode, oasis: any }) {
+export function AppStateProvider({children, oasis}: { children: ReactNode, oasis: MainModule }) {
     function appStateReducer(draft: Draft<AppState>, action: Action) {
         switch (action.type) {
             case "submitEntry": {
-                const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [draft.currentInputText]);
-                const query = oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]);
+                const preprocessedInput = oasis.PreProcessInFix(draft.currentInputText);
+                const query = oasis.FromInFix(preprocessedInput);
 
                 if (!query) return;
 
-                const queryStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [query])
+                const queryStr = oasis.ToMathMLString(query)
 
                 let result;
                 try {
-                    result = oasis.ccall('Oa_SimplifyNF', 'number', ['number'], [query]);
+                    result = oasis.Simplify(query);
                 } catch (error) {
                     draft.history.push({query: queryStr, response: (error as Error).message, error: true})
                     draft.currentInputText = "";
@@ -77,10 +78,7 @@ export function AppStateProvider({children, oasis}: { children: ReactNode, oasis
                     return;
                 }
 
-                const resultStr = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [result])
-
-                oasis.ccall('Oa_Free', 'void', ['number'], [result]);
-                oasis.ccall('Oa_Free', 'void', ['number'], [query]);
+                const resultStr = oasis.ToMathMLString(result)
 
                 draft.history.push({query: queryStr, response: resultStr, error: false})
                 draft.currentInputText = "";

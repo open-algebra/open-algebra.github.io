@@ -1,9 +1,10 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Button, Col, Form, FormControl, Modal, ModalProps, Row, Stack} from "react-bootstrap";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
+import {MainModule} from "oasis";
 
 interface DerivativeBuilderProps {
-    oasis: any
+    oasis: MainModule
 }
 
 export default function DerivativeBuilder({
@@ -16,13 +17,12 @@ export default function DerivativeBuilder({
     let currentEntry = null;
 
     const composedFunction = `dd(${firstArg},${secondArg})`
-    const preprocessedInput = oasis.ccall('Oa_PreProcessInFix', 'string', ['string'], [composedFunction]);
+    const preprocessedInput = oasis.PreProcessInFix(composedFunction);
 
     if (firstArg && secondArg) {
-        const currentEntryExpr = (firstArg && secondArg) ? oasis.ccall('Oa_FromInFix', 'number', ['string'], [preprocessedInput]) : 0;
+        const currentEntryExpr = (firstArg && secondArg) ? oasis.FromInFix(preprocessedInput) : 0;
         if (currentEntryExpr) {
-            currentEntry = oasis.ccall('Oa_ExpressionToMathMLStr', 'string', ['number'], [currentEntryExpr]);
-            oasis.ccall('Oa_Free', 'void', ['number'], [currentEntryExpr]);
+            currentEntry = oasis.ToMathMLString(currentEntryExpr);
         }
     }
 
