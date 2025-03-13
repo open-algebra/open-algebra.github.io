@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.scss";
+import "@/styles/globals.scss";
 import Script from "next/script";
 import CookieDisclaimer from "@/components/CookieDisclaimer";
 

@@ -1,12 +1,7 @@
 @import "bootstrap/scss/bootstrap";
-@import "bootstrap-icons/font/bootstrap-icons";
 
 .navbar-toggler {
   border: none;
-}
-
-.full-height {
-  min-height: calc(100svh - $navbar-brand-height - $navbar-padding-y - $navbar-padding-y - $navbar-brand-padding-y - $navbar-brand-padding-y);
 }
 
 @include media-breakpoint-up(lg) {

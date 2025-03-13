@@ -14,6 +14,8 @@ import OasisDesktopImage from "../../public/oasis-desktop.png"
 import OasisCExampleImage from "../../public/oasisc-example.png"
 import BigCat from "../../public/big-cat.svg"
 
+import "@/styles/navbar-underline.scss"
+
 export default function Home() {
     return (<main>
         <NavigationBar />
