@@ -1,2 +1,27 @@
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
+
+.navbar-toggler {
+  border: none;
+}
+
+.full-height {
+  min-height: calc(100svh - $navbar-brand-height - $navbar-padding-y - $navbar-padding-y - $navbar-brand-padding-y - $navbar-brand-padding-y);
+}
+
+@include media-breakpoint-up(lg) {
+  .navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .nav-link {
+      padding-top: $navbar-padding-y + $nav-link-padding-y;
+      padding-bottom: $navbar-padding-y + $nav-link-padding-y;
+
+      &.active {
+        border-bottom: $nav-underline-border-width solid $nav-underline-link-active-color;
+        padding-bottom: $navbar-padding-y + $nav-link-padding-y - $nav-underline-border-width;
+      }
+    }
+  }
+}

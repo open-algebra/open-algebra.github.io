@@ -1,4 +1,4 @@
-import {Button, Col, FormControl, Row, Stack} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 import {FormEvent, ReactNode} from "react";
 import {
     useAppState,
@@ -39,7 +39,7 @@ const KEYS = new Map<string, ReactNode>([// eslint-disable-next-line react/jsx-k
     ["(-", <mi>(-)</mi>]])
 
 export default function Keypad() {
-    const {currentInputText, currentInputValid} = useAppState();
+    const {currentInputValid} = useAppState();
     const dispatch = useAppStateDispatch();
 
     function appendToInput(addition: string) {
@@ -59,9 +59,8 @@ export default function Keypad() {
         dispatch && dispatch({ type: 'submitEntry' })
     }
 
-    return (<Stack gap={2} className={"h-100 p-2 px-5"}>
-            <FormControl as={"textarea"} className={"flex-grow-1"} placeholder={"Expression text input preview..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
-            <Row xs={4} className={"g-2 overflow-y-auto overflow-x-hidden"}>
+    return (
+            <Row xs={4} className={"h-100 p-2 g-2 overflow-y-auto overflow-x-hidden"}>
                 <Col>
                     <div className={"ratio ratio-1x1"}>
                         <Button variant={"light"} className={"w-100 h-100 border"} onClick={clearTextInput}>Clear</Button>
@@ -85,6 +84,5 @@ export default function Keypad() {
                         <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}><i className={"bi-arrow-return-left"}/></Button>
                     </div>
                 </Col>
-            </Row>
-        </Stack>)
+            </Row>)
 }

@@ -1,8 +1,7 @@
 'use client'
 
-import {Button, Container, Nav, Navbar, NavbarBrand, NavbarCollapse, NavbarToggle, NavLink} from "react-bootstrap";
+import {Container, Nav, Navbar, NavbarBrand, NavbarCollapse, NavbarToggle, NavLink} from "react-bootstrap";
 import {useEffect, useRef} from "react";
-import Link from "next/link";
 import LaunchOASISWeb from "@/components/LaunchOASISWeb";
 
 export default function NavigationBar()
@@ -16,7 +15,7 @@ export default function NavigationBar()
         })
     }, [])
 
-    return (<Navbar expand={"lg"} fixed={"top"} className={"bg-light-subtle"} ref={navBarRef}>
+    return (<Navbar expand={"lg"} sticky={"top"} className={"bg-light-subtle"} ref={navBarRef}>
         <Container>
             <NavbarBrand href={"#"}>Open Algebra</NavbarBrand>
             <NavbarToggle aria-controls="navbar-nav"/>

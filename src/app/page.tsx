@@ -1,26 +1,26 @@
+import Image from "next/image";
 import {
     Button,
     Container,
     Stack
 } from "react-bootstrap";
 import FullScreenContentWithImage from "@/components/FullScreenContentWithImage";
-
-import {Major_Mono_Display} from "next/font/google";
+import NavigationBar from "@/components/NavigationBar";
+import LaunchOASISWeb from "@/components/LaunchOASISWeb";
 
 import OasisExampleImage from "../../public/oasis-example.png"
 import OasisWebImage from "../../public/oasis-web.png"
 import OasisDesktopImage from "../../public/oasis-desktop.png"
 import OasisCExampleImage from "../../public/oasisc-example.png"
-import NavigationBar from "@/components/NavigationBar";
-import Link from "next/link";
-import LaunchOASISWeb from "@/components/LaunchOASISWeb";
+import BigCat from "../../public/big-cat.svg"
 
 export default function Home() {
     return (<main>
         <NavigationBar />
         <section>
-            <Stack className={"min-vh-100"}>
+            <Stack className={"full-height"}>
                 <Stack className="flex-grow-1 justify-content-center" gap={5}>
+                    <Image src={BigCat} alt={"big cat"} className={"w-50 h-auto align-self-center"} />
                     <Container className={"text-center"}>
                         <h1 className={"display-1 text-center text-uppercase"}>Open Algebra Project</h1>
                         <p className={"lead"}>Democratizing Algebraic Computation</p>

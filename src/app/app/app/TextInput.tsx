@@ -27,25 +27,24 @@ export default function TextInput() {
     }
 
     return (
-        <div className={"p-3 h-100"}>
-            <Form onSubmit={onSubmit} className={"h-100"} ref={formRef}>
-                <Stack gap={3} className={"h-100"}>
-                    <Form.Control
-                        as={"textarea"}
-                        className={"flex-grow-1"}
-                        placeholder="Enter an expression..."
-                        isInvalid={!currentInputValid}
-                        onChange={onChange}
-                        onKeyDown={onEnterPress}
-                        value={currentInputText}
-                    />
-                    <Button
-                        variant="primary"
-                        type={"submit"}
-                        disabled={!currentInputValid}
-                    >Submit</Button>
-                </Stack>
-            </Form>
-        </div>
+        <Form onSubmit={onSubmit} className={"p-2 h-100"} ref={formRef}>
+            <Stack className={"d-flex flex-column flex-md-row h-100"} gap={2}>
+                <Form.Control
+                    as={"textarea"}
+                    className={"flex-grow-1"}
+                    style={{resize: "none"}}
+                    placeholder="Enter an expression..."
+                    isInvalid={!currentInputValid}
+                    onChange={onChange}
+                    onKeyDown={onEnterPress}
+                    value={currentInputText}
+                />
+                <Button
+                    variant="primary"
+                    type={"submit"}
+                    disabled={!currentInputValid}
+                >Submit</Button>
+            </Stack>
+        </Form>
     )
 }

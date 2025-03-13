@@ -6,12 +6,12 @@ import Image from "next/image";
 
 export default function EquationsView() {
     const [showInDevWarning, setShowInDevWarning] = useState(true);
-    const {history, currentInputExpressionStr} = useAppState()
+    const {history, currentInputExpressionStr, currentInputText} = useAppState()
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-    }, [history, currentInputExpressionStr]);
+    }, [history, currentInputText]);
 
     return (<div className={"h-100 overflow-y-auto"}>
             <Container className={"py-3"}>
@@ -39,10 +39,15 @@ export default function EquationsView() {
                                       dangerouslySetInnerHTML={{__html: response}}></math>
                             </div>}
                         </Stack>))}
-                    {currentInputExpressionStr && <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
-                        <math display={"block"}
-                              dangerouslySetInnerHTML={{__html: currentInputExpressionStr}}></math>
-                    </div>}
+                    {currentInputExpressionStr &&
+                            <Stack gap={3}>
+                                <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
+                                        <math display={"block"}
+                                              dangerouslySetInnerHTML={{__html: currentInputExpressionStr}}></math>
+                                </div>
+                                <small className={"font-monospace text-muted ms-auto"}>input string: {currentInputText}</small>
+                            </Stack>
+                    }
                 </Stack>
             </Container>
             <div ref={bottomRef}/>
