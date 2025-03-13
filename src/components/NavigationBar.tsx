@@ -3,6 +3,7 @@
 import {Button, Container, Nav, Navbar, NavbarBrand, NavbarCollapse, NavbarToggle, NavLink} from "react-bootstrap";
 import {useEffect, useRef} from "react";
 import Link from "next/link";
+import LaunchOASISWeb from "@/components/LaunchOASISWeb";
 
 export default function NavigationBar()
 {
@@ -26,9 +27,7 @@ export default function NavigationBar()
                     <NavLink href={"#Desktop"}>Desktop</NavLink>
                     <NavLink href={"#OasisC"}>OasisC</NavLink>
                 </Nav>
-                <Link href={"/app"} passHref legacyBehavior>
-                    <Button>Open OASIS Web</Button>
-                </Link>
+                <LaunchOASISWeb/>
             </NavbarCollapse>
         </Container>
     </Navbar>)

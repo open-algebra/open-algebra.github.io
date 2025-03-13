@@ -13,8 +13,7 @@ import OasisDesktopImage from "../../public/oasis-desktop.png"
 import OasisCExampleImage from "../../public/oasisc-example.png"
 import NavigationBar from "@/components/NavigationBar";
 import Link from "next/link";
-
-const majorMonoDisplay = Major_Mono_Display({subsets: ["latin"], weight: "400"});
+import LaunchOASISWeb from "@/components/LaunchOASISWeb";
 
 export default function Home() {
     return (<main>
@@ -22,8 +21,8 @@ export default function Home() {
         <section>
             <Stack className={"min-vh-100"}>
                 <Stack className="flex-grow-1 justify-content-center" gap={5}>
-                    <Container className={"text-center py-5"}>
-                        <h1 className={`${majorMonoDisplay.className} display-1 text-center`}>open Algebra project</h1>
+                    <Container className={"text-center"}>
+                        <h1 className={"display-1 text-center text-uppercase"}>Open Algebra Project</h1>
                         <p className={"lead"}>Democratizing Algebraic Computation</p>
                     </Container>
                     <Container>
@@ -55,8 +54,8 @@ export default function Home() {
                     making it an indispensable tool for anyone engaged in mathematical research or
                     education.</p>
                 <Stack direction={"horizontal"} gap={3}>
-                    <Button variant={"outline-light"} href={"/Oasis"}>API Documentation</Button>
-                    <Button variant={"outline-light"} href={"https://github.com/open-algebra/Oasis"}>GitHub Repository</Button>
+                    <Button variant={"outline-light"} href={"/Oasis"}><i className={'bi-book pe-1'} />API Documentation</Button>
+                    <Button variant={"outline-light"} href={"https://github.com/open-algebra/Oasis"}><i className={'bi-github pe-1'} />GitHub Repository</Button>
                 </Stack>
             </FullScreenContentWithImage>
         </section>
@@ -75,11 +74,7 @@ export default function Home() {
                         convenient, platform-independent environment.</p>
                     <p>No downloads, no installations—just open your browser and start exploring the world of algebraic
                         computation with OASIS Web.</p>
-                    <Link href={"/app"} passHref legacyBehavior>
-                        <div className={"d-flex"}>
-                            <Button>Open OASIS Web</Button>
-                        </div>
-                    </Link>
+                    <LaunchOASISWeb />
                 </div>
             </FullScreenContentWithImage>
         </section>
@@ -95,7 +90,7 @@ export default function Home() {
                     write a single line of code. It&apos;s perfect for educators who want to demonstrate concepts in the
                     classroom, students who are learning algebra, and researchers who need a quick and intuitive way to
                     perform symbolic computations.</p>
-                <Button variant={"outline-dark"} href={"https://github.com/open-algebra/gui"}>GitHub Repository</Button>
+                <Button variant={"outline-dark"} href={"https://github.com/open-algebra/gui"}><i className={'bi-github pe-1'} />GitHub Repository</Button>
             </FullScreenContentWithImage>
         </section>
         <section id={"OasisC"}>
@@ -107,7 +102,7 @@ export default function Home() {
                     while working within the C programming environment, making it an ideal solution for
                     developers who need to incorporate advanced algebraic capabilities into their
                     applications.</p>
-                <Button variant={"outline-light"} href={"https://github.com/open-algebra/OasisC"}>GitHub Repository</Button>
+                <Button variant={"outline-light"} href={"https://github.com/open-algebra/OasisC"}><i className={'bi-github pe-1'} /> GitHub Repository</Button>
             </FullScreenContentWithImage>
         </section>
     </main>);

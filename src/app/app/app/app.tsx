@@ -17,6 +17,7 @@ import DerivativeBuilder from "@/app/app/app/DerivativeBuilder";
 
 import "./style.scss"
 import {MainModule} from "@open-algebra/oasis/oasis-web";
+import Link from "next/link";
 
 type ViewId = 'Equations View' | 'Text Input' | 'Keypad';
 
@@ -82,13 +83,13 @@ export default function App({oasis}: { oasis: MainModule }) {
             </Modal.Header>
             <Modal.Body>
                 <div className={"pb-3"}>
-                    Welcome to OASIS! To get started, type in any expression such as &quot;2x+3x&quot; Oasis
+                    Welcome to OASIS! To get started, type in any expression such as &quot;2x+3x&quot; OASIS
                     automatically
                     recognizes the variables and is able to add them for you. Some variable names are reserved. For
                     instance &quot;i&quot; is reserved for imaginary numbers.
                 </div>
                 <h5>Functions</h5>
-                Oasis also understands some functions. For instance, <code>dd(x^2,x)</code> takes derivative of x^2
+                OASIS also understands some functions. For instance, <code>dd(x^2,x)</code> takes derivative of x^2
                 with respect to x. Likewise, <code>in(2x,x)</code> takes the integral of 2x with respect to x
                 and &nbsp; <code>log(10,100)</code>
                 takes the logarithm of 100 with a base of 10.
@@ -97,7 +98,7 @@ export default function App({oasis}: { oasis: MainModule }) {
         <Stack style={{height: "100svh"}}>
             <Navbar expand="lg" sticky="top">
                 <Container fluid>
-                    <Navbar.Brand>OASIS Web</Navbar.Brand>
+                    <Navbar.Brand>OASIS</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
@@ -129,13 +130,16 @@ export default function App({oasis}: { oasis: MainModule }) {
                                 <NavDropdown.Divider/>
                                 <NavDropdown.Header>GitHub Repositories</NavDropdown.Header>
                                 <NavDropdown.Item
-                                    href="https://github.com/open-algebra/Oasis">Oasis</NavDropdown.Item>
+                                    href="https://github.com/open-algebra/Oasis">OASIS</NavDropdown.Item>
                                 <NavDropdown.Item
                                     href="https://github.com/open-algebra/OasisC">OasisC</NavDropdown.Item>
-                                <NavDropdown.Item href="https://github.com/open-algebra/webapp">Oasis
+                                <NavDropdown.Item href="https://github.com/open-algebra/webapp">OASIS
                                     Web</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
+                        <Link href={"/"} passHref legacyBehavior>
+                            <Nav.Link className={"text-muted"}>openalgebra.org <i className={"bi-box-arrow-up-right ps-1"} /></Nav.Link>
+                        </Link>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

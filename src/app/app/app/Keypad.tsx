@@ -59,7 +59,7 @@ export default function Keypad() {
         dispatch && dispatch({ type: 'submitEntry' })
     }
 
-    return (<Stack gap={2} className={"h-100 p-2"}>
+    return (<Stack gap={2} className={"h-100 p-2 px-5"}>
             <FormControl as={"textarea"} className={"flex-grow-1"} placeholder={"Expression text input preview..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
             <Row xs={4} className={"g-2 overflow-y-auto overflow-x-hidden"}>
                 <Col>
@@ -82,7 +82,7 @@ export default function Keypad() {
                     </Col>))}
                 <Col>
                     <div className={"ratio ratio-1x1"}>
-                        <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}>Submit</Button>
+                        <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}><i className={"bi-arrow-return-left"}/></Button>
                     </div>
                 </Col>
             </Row>
