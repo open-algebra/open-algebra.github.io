@@ -143,7 +143,7 @@ export default function App({oasis}: { oasis: MainModule }) {
                 className={"mosaic-blueprint-theme bg-light-subtle flex-grow-1"}
                 blueprintNamespace={'bp5'}
                 renderTile={(id, path) => (<MosaicWindow<ViewId>
-                    path={path} title={id} className={"rounded shadow border"}
+                    path={path} title={id}
                     toolbarControls={id !== 'Equations View' ? DEFAULT_CONTROLS_WITHOUT_CREATION : React.Children.toArray([
                         <ExpandButton/>])}>
                     {ELEMENT_MAP[id]}

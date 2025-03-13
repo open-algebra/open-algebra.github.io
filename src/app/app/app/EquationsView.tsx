@@ -11,7 +11,7 @@ export default function EquationsView() {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     }, [history, currentInputExpressionStr]);
 
-    return (<div className={"h-100 overflow-y-scroll"}>
+    return (<div className={"h-100 overflow-y-auto"}>
             <Container className={"py-3"}>
                 <Stack gap={3}>
                     <Alert variant={"warning"} show={showInDevWarning} onClose={() => setShowInDevWarning(false)}

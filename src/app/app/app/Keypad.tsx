@@ -59,23 +59,31 @@ export default function Keypad() {
         dispatch && dispatch({ type: 'submitEntry' })
     }
 
-    return (<Stack gap={2} className={"h-100 px-2 pt-2"}>
-            <FormControl placeholder={"Enter an expression..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
-            <Row xs={4} className={"pb-2 g-2 flex-grow-1 overflow-y-scroll"}>
+    return (<Stack gap={2} className={"h-100 p-2"}>
+            <FormControl as={"textarea"} className={"flex-grow-1"} placeholder={"Expression text input preview..."} value={currentInputText} isInvalid={!currentInputValid} readOnly/>
+            <Row xs={4} className={"g-2 overflow-y-auto overflow-x-hidden"}>
                 <Col>
-                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={clearTextInput}>Clear</Button>
+                    <div className={"ratio ratio-1x1"}>
+                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={clearTextInput}>Clear</Button>
+                    </div>
                 </Col>
                 <Col>
-                    <Button variant={"light"} className={"w-100 h-100 border"} onClick={backspaceTextInput}><i
-                        className={"bi-backspace"}/></Button>
+                    <div className={"ratio ratio-1x1"}>
+                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={backspaceTextInput}><i
+                            className={"bi-backspace"}/></Button>
+                    </div>
                 </Col>
                 {Array.from(KEYS.keys()).map((key, i) => (<Col key={i}>
+                    <div className={"ratio ratio-1x1"}>
                         <Button variant={"light"} className={"w-100 h-100 border"} onClick={() => appendToInput(key)}>
                             <math display={"block"}>{KEYS.get(key)}</math>
                         </Button>
+                    </div>
                     </Col>))}
                 <Col>
-                    <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}>Submit</Button>
+                    <div className={"ratio ratio-1x1"}>
+                        <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}>Submit</Button>
+                    </div>
                 </Col>
             </Row>
         </Stack>)
