@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@open-algebra/oasis": "^0.0.1",
+    "@open-algebra/oasis": "^0.0.4",
     "@types/bootstrap": "^5.2.10",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",

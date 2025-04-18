@@ -2,7 +2,7 @@ import {createContext, Dispatch, ReactNode, useContext} from "react";
 import {Draft} from "immer";
 import ParseExpression from "@/app/app/app/ParseExpression";
 import {useImmerReducer} from "use-immer";
-import {MainModule} from "oasis";
+import {MainModule} from "@open-algebra/oasis/oasis-web";
 
 export interface HistoryEntry {
     query: string,
@@ -89,7 +89,10 @@ export function AppStateProvider({children, oasis}: { children: ReactNode, oasis
             case "setInput": {
                 const {input} = action
                 const newInputExpressionStr = ParseExpression(oasis, input);
-                if (newInputExpressionStr) draft.currentInputExpressionStr = newInputExpressionStr;
+                if (newInputExpressionStr) {
+                    draft.currentInputExpressionStr = newInputExpressionStr;
+                    console.log(newInputExpressionStr)
+                }
 
                 draft.currentInputText = input
                 draft.currentInputValid = newInputExpressionStr.length > 0;
