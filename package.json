@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/react": "^0.4.0",
     "@open-algebra/oasis": "^0.0.4",
     "@types/bootstrap": "^5.2.10",
     "bootstrap": "^5.3.3",
@@ -18,7 +19,6 @@
     "react": "^18",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18",
-    "react-mosaic-component": "^6.1.0",
     "use-immer": "^0.10.0",
     "use-magic-grid": "^0.0.8"
   },
