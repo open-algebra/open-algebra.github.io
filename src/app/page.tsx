@@ -22,7 +22,7 @@ export default function Home() {
         <section>
             <Stack className={"full-height"}>
                 <Stack className="flex-grow-1 justify-content-center" gap={5}>
-                    <Image src={BigCat} alt={"big cat"} className={"w-50 h-auto align-self-center"} />
+                    <Image src={BigCat} alt={"big cat"} className={"w-50 h-auto align-self-center"} loading={"eager"} />
                     <Container className={"text-center"}>
                         <h1 className={"display-1 text-center text-uppercase"}>Open Algebra Project</h1>
                         <p className={"lead"}>Democratizing Algebraic Computation</p>

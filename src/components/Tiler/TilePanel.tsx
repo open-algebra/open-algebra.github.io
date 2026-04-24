@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/refs */
 
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
@@ -20,12 +21,15 @@ export const TilePanel = React.forwardRef<HTMLDivElement, TilePanelProps>(
         const operation = useDragOperation();
         const activeTileId = parseTileDragId(String(operation.source?.id ?? ''));
         const showDropZones = activeTileId !== null && activeTileId !== id;
+        const dragRef = drag.ref;
+        const dragHandleRef = drag.handleRef;
+        const isDragging = drag.isDragging;
 
         return (
             <Card
-                ref={drag.ref}
+                ref={dragRef}
                 className={`tile-panel h-100 shadow-sm ${
-                    drag.isDragging ? 'tile-panel-dragging' : ''
+                    isDragging ? 'tile-panel-dragging' : ''
                 } ${showDropZones ? 'tile-panel-drop-mode' : ''}`}
             >
                 <Card.Header className="d-flex justify-content-between align-items-center gap-2 tile-panel-header">
@@ -34,7 +38,7 @@ export const TilePanel = React.forwardRef<HTMLDivElement, TilePanelProps>(
                             variant="outline-secondary"
                             size="sm"
                             className="tile-drag-handle"
-                            ref={drag.handleRef}
+                            ref={dragHandleRef}
                             title="Drag to rearrange windows"
                         >
                             <i className="bi bi-grid-3x3-gap-fill" />
@@ -83,12 +87,14 @@ interface TileDropZoneProps {
 
 function TileDropZone({ id, position, iconClassName, label }: TileDropZoneProps) {
     const drop = useDroppable({ id: getDropZoneId(id, position) });
+    const dropRef = drop.ref;
+    const isDropTarget = drop.isDropTarget;
 
     return (
         <div
-            ref={drop.ref}
+            ref={dropRef}
             className={`tile-drop-zone tile-drop-zone-${position} ${
-                drop.isDropTarget ? 'tile-drop-zone-active' : ''
+                isDropTarget ? 'tile-drop-zone-active' : ''
             }`}
         >
             <i className={iconClassName} />

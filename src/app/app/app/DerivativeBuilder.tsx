@@ -14,29 +14,24 @@ export default function DerivativeBuilder({
     const [secondArg, setSecondArg] = useState("");
     const dispatch = useAppStateDispatch();
 
-    let currentEntry = null;
-
     const composedFunction = `dd(${firstArg},${secondArg})`
     const preprocessedInput = oasis.PreProcessInFix(composedFunction);
-
-    if (firstArg && secondArg) {
-        const currentEntryExpr = (firstArg && secondArg) ? oasis.FromInFix(preprocessedInput) : 0;
-        if (currentEntryExpr) {
-            currentEntry = oasis.ToMathMLString(currentEntryExpr);
-        }
-    }
+    const currentEntry = firstArg && secondArg
+        ? (() => {
+            const currentEntryExpr = oasis.FromInFix(preprocessedInput);
+            return currentEntryExpr ? oasis.ToMathMLString(currentEntryExpr) : null;
+        })()
+        : null;
 
     function onSubmit(e: FormEvent) {
         e.preventDefault();
 
         if (!dispatch) return;
         dispatch({type: 'appendToInput', addition: composedFunction})
-
-        currentEntry = null;
         onHide && onHide();
     }
 
-    return (<Modal onHide={onHide} {...props}>
+    return (<Modal onHide={onHide} animation={false} {...props}>
         <Modal.Header closeButton>
             <Modal.Title>Derivative Builder</Modal.Title>
         </Modal.Header>

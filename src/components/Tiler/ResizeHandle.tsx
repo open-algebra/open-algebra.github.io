@@ -101,9 +101,10 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
                 document.addEventListener('touchend', handleTouchEnd);
             }}
             title={`Drag to resize ${isVertical ? 'columns' : 'rows'}`}
-            role="slider"
+            role="separator"
             tabIndex={0}
             aria-label={`Resize ${isVertical ? 'columns' : 'rows'}`}
+            aria-orientation={isVertical ? 'vertical' : 'horizontal'}
             style={{ zIndex: 10 }}
         />
     );

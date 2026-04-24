@@ -17,11 +17,11 @@ export default function EquationsView() {
             <Container className={"py-3"}>
                 <Stack gap={3}>
                     <div className={"w-50 align-self-center"}>
-                        <Image src={BigCat} alt={"big cat"} className={"w-100 h-auto"} />
+                        <Image src={BigCat} alt={"big cat"} className={"w-100 h-auto"} loading={"eager"} />
                     </div>
                     <h1 className={"text-center"}>Open Algebra Software for Inferring Solutions</h1>
                     <Alert variant={"warning"} show={showInDevWarning} onClose={() => setShowInDevWarning(false)}
-                           dismissible>
+                           dismissible transition={false}>
                         <h5>Here be dragons!</h5>
                         OASIS and OASIS Web are still under active development. If something does not work, please feel free to <Alert.Link
                             href={"https://github.com/open-algebra/Oasis/issues/new/choose"}>file an

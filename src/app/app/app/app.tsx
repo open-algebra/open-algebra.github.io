@@ -3,7 +3,7 @@
 import {
     Container, Modal, Nav, Navbar, NavDropdown, Stack
 } from "react-bootstrap";
-import React, {ReactElement, useEffect, useMemo, useState} from "react";
+import React, {ReactElement, startTransition, useEffect, useMemo, useState} from "react";
 import { AppStateProvider } from "@/app/app/app/AppStateContext";
 import FunctionBuilder from "@/app/app/app/FunctionBuilder";
 import EquationsView from "@/app/app/app/EquationsView";
@@ -81,13 +81,15 @@ export default function App({oasis}: { oasis: MainModule }) {
 
     useEffect(() => {
         if (typeof window === "undefined" || !window.matchMedia('(max-width: 991px)').matches) return
-        setWindowLayout({
-            kind: 'split',
-            direction: "column",
-            first: { kind: 'leaf', id: "Equations View" },
-            second: { kind: 'leaf', id: "Keypad" },
-            splitPercentage: 50
-        })
+        startTransition(() => {
+            setWindowLayout({
+                kind: 'split',
+                direction: "column",
+                first: { kind: 'leaf', id: "Equations View" },
+                second: { kind: 'leaf', id: "Keypad" },
+                splitPercentage: 50
+            })
+        });
     }, []);
 
     return (<AppStateProvider oasis={oasis}>
@@ -99,7 +101,7 @@ export default function App({oasis}: { oasis: MainModule }) {
         <FunctionBuilder title={"Logarithm Builder"} func={"log"} firstArgLabel={"Base"}
                          secondArgLabel={"Argument"} show={showLogBuilder}
                          onHide={() => setShowLogBuilder(false)} oasis={oasis!}/>
-        <Modal show={showHelp} onHide={closeHelp}>
+        <Modal show={showHelp} onHide={closeHelp} animation={false}>
             <Modal.Header closeButton>
                 <Modal.Title>Help</Modal.Title>
             </Modal.Header>
@@ -159,9 +161,9 @@ export default function App({oasis}: { oasis: MainModule }) {
                                     Web</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
-                        <Link href={"/"} passHref legacyBehavior>
-                            <Nav.Link className={"text-muted"}>openalgebra.org <i className={"bi-box-arrow-up-right ps-1"} /></Nav.Link>
-                        </Link>
+                        <Nav.Link as={Link} href={"/"} className={"text-muted"}>
+                            openalgebra.org <i className={"bi-box-arrow-up-right ps-1"} />
+                        </Nav.Link>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

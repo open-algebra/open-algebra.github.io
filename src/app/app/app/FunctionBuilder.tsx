@@ -37,7 +37,7 @@ export default function FunctionBuilder({
         onHide && onHide();
     }
 
-    return (<Modal onHide={onHide} {...props}>
+    return (<Modal onHide={onHide} animation={false} {...props}>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
