@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { WindowNode, ViewId } from './types';
 import { TilePanel } from './TilePanel';
 import { resizeByPath } from './operations';
+import { ResizeHandle } from './ResizeHandle';
 
 interface TilerNodeProps {
     node: WindowNode;
@@ -20,6 +21,8 @@ export const TilerNode: React.FC<TilerNodeProps> = ({
     onResize,
     renderTile,
 }) => {
+    const splitRef = useRef<HTMLDivElement>(null);
+
     if (node.kind === 'leaf') {
         return (
             <div className="tile-container" key={path || node.id}>
@@ -34,6 +37,7 @@ export const TilerNode: React.FC<TilerNodeProps> = ({
 
     return (
         <div
+            ref={splitRef}
             className={`tile-split ${isRow ? 'tile-split-row' : 'tile-split-column'}`}
             key={path || 'root'}
         >
@@ -51,16 +55,10 @@ export const TilerNode: React.FC<TilerNodeProps> = ({
                     isRow ? 'tile-divider-vertical' : 'tile-divider-horizontal'
                 }`}
             >
-                <input
-                    type="range"
-                    min={10}
-                    max={90}
-                    value={node.splitPercentage}
-                    onChange={(e) => {
-                        const nextSplit = Number(e.target.value);
-                        onResize(path, nextSplit);
-                    }}
-                    aria-label={`Resize ${isRow ? 'columns' : 'rows'}`}
+                <ResizeHandle
+                    isVertical={isRow}
+                    onResize={(splitPercentage) => onResize(path, splitPercentage)}
+                    containerRef={splitRef}
                 />
             </div>
             <div className="tile-split-pane" style={{ flexBasis: secondBasis }}>

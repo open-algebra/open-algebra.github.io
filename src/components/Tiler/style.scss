@@ -37,28 +37,59 @@
   align-items: center;
   justify-content: center;
   background: rgba(108, 117, 125, 0.08);
-
-  input[type='range'] {
-    accent-color: var(--bs-primary);
-  }
+  position: relative;
+  flex-shrink: 0;
 }
 
 .tile-divider-vertical {
   width: 0.65rem;
-
-  input[type='range'] {
-    width: 7rem;
-    transform: rotate(90deg);
-  }
+  cursor: col-resize;
+  min-width: 0.65rem;
 }
 
 .tile-divider-horizontal {
   height: 0.65rem;
+  cursor: row-resize;
+  min-height: 0.65rem;
+}
 
-  input[type='range'] {
-    width: 100%;
-    max-width: 10rem;
+.resize-handle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: inherit;
+  position: relative;
+  user-select: none;
+  pointer-events: auto;
+
+  &::after {
+    content: '';
+    background: var(--bs-secondary);
+    border-radius: 0.25rem;
+    transition: background-color 0.15s ease;
+    pointer-events: none;
   }
+}
+
+.resize-handle-vertical::after {
+  width: 0.25rem;
+  height: 2.5rem;
+}
+
+.resize-handle-horizontal::after {
+  width: 2.5rem;
+  height: 0.25rem;
+}
+
+.resize-handle:hover::after,
+.resize-handle:focus::after {
+  background: var(--bs-primary);
+}
+
+.resize-handle:active::after {
+  background: var(--bs-info);
 }
 
 .tile-panel {

@@ -5,6 +5,7 @@
 export { Tiler } from './Tiler';
 export { TilePanel } from './TilePanel';
 export { TilerNode } from './TilerNode';
+export { ResizeHandle } from './ResizeHandle';
 
 // Type exports
 export type { WindowLeaf, WindowSplit, WindowNode, ViewId, ViewElements, TilerProps } from './types';
