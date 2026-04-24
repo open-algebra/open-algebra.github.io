@@ -8,13 +8,14 @@ export { TilerNode } from './TilerNode';
 export { ResizeHandle } from './ResizeHandle';
 
 // Type exports
-export type { WindowLeaf, WindowSplit, WindowNode, ViewId, ViewElements, TilerProps } from './types';
+export type { DropPosition, WindowLeaf, WindowSplit, WindowNode, ViewId, ViewElements, TilerProps } from './types';
 
 // Operation exports
 export {
     containsView,
     addLeaf,
     removeLeaf,
+    moveLeaf,
     swapLeaves,
     resizeByPath,
 } from './operations';

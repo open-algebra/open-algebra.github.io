@@ -73,7 +73,7 @@ export default function App({oasis}: { oasis: MainModule }) {
             id={id}
             canClose={canClose}
             title={id}
-            onClose={onClose}
+            onClose={(closedId) => onClose(closedId as ViewId)}
         >
             {viewElements[id]}
         </TilePanel>

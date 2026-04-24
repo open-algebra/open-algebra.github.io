@@ -2,30 +2,36 @@
 
 import React from 'react';
 import { DragDropProvider, DragEndEvent } from '@dnd-kit/react';
-import { WindowNode, ViewId, TilerProps } from './types';
+import { ViewId, TilerProps } from './types';
 import { TilerNode } from './TilerNode';
-import { resizeByPath, swapLeaves } from './operations';
+import { resizeByPath, moveLeaf } from './operations';
+import { parseDropZoneId, parseTileDragId } from './dnd';
 import './style.scss';
 
-interface TilerInstance<T extends ViewId = ViewId> extends TilerProps<T> {
-    // Extends the props with complete component interface
-}
+type TilerComponent = <T extends ViewId = ViewId>(
+    props: TilerProps<T> & React.RefAttributes<HTMLDivElement>
+) => React.ReactElement | null;
 
-export const Tiler = React.forwardRef<HTMLDivElement, TilerInstance>(
-    ({ value, onChange, renderTile, className = '' }, ref) => {
+type TilerComponentWithDisplayName = TilerComponent & {
+    displayName?: string;
+};
+
+const TilerImpl = <T extends ViewId = ViewId>(
+    { value, onChange, renderTile, className = '' }: TilerProps<T>,
+    ref: React.ForwardedRef<HTMLDivElement>
+) => {
         const handleDragEnd = (event: DragEndEvent) => {
-            const activeId = String(event.operation?.source?.id ?? '');
-            const overId = String(event.operation?.target?.id ?? '');
-            if (!activeId.startsWith('tile-') || !overId.startsWith('drop-')) return;
+            const from = parseTileDragId(String(event.operation?.source?.id ?? ''));
+            const dropZone = parseDropZoneId(String(event.operation?.target?.id ?? ''));
+            if (!from || !dropZone) return;
 
-            const from = activeId.replace('tile-', '') as ViewId;
-            const to = overId.replace('drop-', '') as ViewId;
-            if (from === to) return;
+            const { targetId, position } = dropZone;
+            if (from === targetId) return;
 
-            onChange(swapLeaves(value, from, to));
+            onChange(moveLeaf(value, from, targetId, position));
         };
 
-        const handleClose = (id: ViewId) => {
+        const handleClose = (id: T) => {
             // The removeLeaf operation is handled by the consumer
             renderTile(id, false, (closedId) => {
                 // This callback will be invoked when a tile is closed
@@ -44,7 +50,7 @@ export const Tiler = React.forwardRef<HTMLDivElement, TilerInstance>(
                     className={`tiler-root bg-light-subtle flex-grow-1 ${className}`}
                 >
                     {value ? (
-                        <TilerNode
+                        <TilerNode<T>
                             node={value}
                             path=""
                             onClose={handleClose}
@@ -55,7 +61,8 @@ export const Tiler = React.forwardRef<HTMLDivElement, TilerInstance>(
                 </div>
             </DragDropProvider>
         );
-    }
-);
+    };
+
+export const Tiler = React.forwardRef(TilerImpl) as TilerComponentWithDisplayName;
 
 Tiler.displayName = 'Tiler';

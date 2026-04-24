@@ -2,31 +2,29 @@
 
 import React, { useRef } from 'react';
 import { WindowNode, ViewId } from './types';
-import { TilePanel } from './TilePanel';
-import { resizeByPath } from './operations';
 import { ResizeHandle } from './ResizeHandle';
 
-interface TilerNodeProps {
+interface TilerNodeProps<T extends ViewId = ViewId> {
     node: WindowNode;
     path: string;
-    onClose: (id: ViewId) => void;
+    onClose: (id: T) => void;
     onResize: (path: string, splitPercentage: number) => void;
-    renderTile: (id: ViewId, canClose: boolean, onClose: (id: ViewId) => void) => React.ReactElement;
+    renderTile: (id: T, canClose: boolean, onClose: (id: T) => void) => React.ReactElement;
 }
 
-export const TilerNode: React.FC<TilerNodeProps> = ({
+export const TilerNode = <T extends ViewId = ViewId>({
     node,
     path,
     onClose,
     onResize,
     renderTile,
-}) => {
+}: TilerNodeProps<T>) => {
     const splitRef = useRef<HTMLDivElement>(null);
 
     if (node.kind === 'leaf') {
         return (
             <div className="tile-container" key={path || node.id}>
-                {renderTile(node.id, node.id !== 'Equations View', onClose)}
+                {renderTile(node.id as T, node.id !== 'Equations View', onClose)}
             </div>
         );
     }
@@ -42,7 +40,7 @@ export const TilerNode: React.FC<TilerNodeProps> = ({
             key={path || 'root'}
         >
             <div className="tile-split-pane" style={{ flexBasis: firstBasis }}>
-                <TilerNode
+                <TilerNode<T>
                     node={node.first}
                     path={`${path}${path ? '.' : ''}first`}
                     onClose={onClose}
@@ -62,7 +60,7 @@ export const TilerNode: React.FC<TilerNodeProps> = ({
                 />
             </div>
             <div className="tile-split-pane" style={{ flexBasis: secondBasis }}>
-                <TilerNode
+                <TilerNode<T>
                     node={node.second}
                     path={`${path}${path ? '.' : ''}second`}
                     onClose={onClose}

@@ -4,6 +4,8 @@
 
 export type ViewId = string;
 
+export type DropPosition = 'top' | 'right' | 'bottom' | 'left' | 'center';
+
 export type WindowLeaf = {
     kind: 'leaf';
     id: ViewId;

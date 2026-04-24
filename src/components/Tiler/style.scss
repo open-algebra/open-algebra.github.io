@@ -93,6 +93,7 @@
 }
 
 .tile-panel {
+  position: relative;
   border-radius: 0.65rem;
   overflow: hidden;
 
@@ -113,6 +114,11 @@
   outline-offset: -2px;
 }
 
+.tile-panel-drop-mode .tile-panel-body,
+.tile-panel-drop-mode .tile-panel-header {
+  filter: saturate(0.9);
+}
+
 .tile-panel-dragging {
   opacity: 0.75;
 }
@@ -123,6 +129,80 @@
 
 .tile-drag-handle:active {
   cursor: grabbing;
+}
+
+.tile-drop-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    ". top ."
+    "left center right"
+    ". bottom .";
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(248, 249, 250, 0.24);
+  backdrop-filter: blur(2px);
+}
+
+.tile-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 1px dashed rgba(13, 110, 253, 0.45);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--bs-primary-text-emphasis);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.tile-drop-zone-top {
+  grid-area: top;
+}
+
+.tile-drop-zone-left {
+  grid-area: left;
+}
+
+.tile-drop-zone-center {
+  grid-area: center;
+}
+
+.tile-drop-zone-right {
+  grid-area: right;
+}
+
+.tile-drop-zone-bottom {
+  grid-area: bottom;
+}
+
+.tile-drop-zone-active {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
+  box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.25);
+  transform: scale(1.02);
+}
+
+.tile-drop-zone-label {
+  line-height: 1;
 }
 
 @media (max-width: 991px) {
