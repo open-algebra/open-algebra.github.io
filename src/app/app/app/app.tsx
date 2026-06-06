@@ -182,7 +182,7 @@ export default function App({oasis}: { oasis: MainModule }) {
                             </MenubarContent>
                         </MenubarMenu>
                     </Menubar>
-                    <Link href={"/"} className={"ml-auto rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground"}>
+                    <Link href={"/"} className={"ml-auto hidden rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground md:block"}>
                         openalgebra.org
                     </Link>
                 </div>

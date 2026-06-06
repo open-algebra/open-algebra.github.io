@@ -61,20 +61,20 @@ export default function Keypad() {
 
     return (
             <div className="grid h-full grid-cols-4 gap-2 overflow-y-auto overflow-x-hidden p-2">
-                <div className="aspect-square">
+                <div className="min-h-12 md:aspect-square">
                     <Button variant="secondary" className="h-full w-full border" onClick={clearTextInput}>Clear</Button>
                 </div>
-                <div className="aspect-square">
+                <div className="min-h-12 md:aspect-square">
                     <Button variant="secondary" className="h-full w-full border" onClick={backspaceTextInput}>Back</Button>
                 </div>
                 {Array.from(KEYS.keys()).map((key, i) => (
-                    <div className="aspect-square" key={i}>
+                    <div className="min-h-12 md:aspect-square" key={i}>
                         <Button variant="secondary" className="h-full w-full border" onClick={() => appendToInput(key)}>
                             <math display={"block"}>{KEYS.get(key)}</math>
                         </Button>
                     </div>
                 ))}
-                <div className="aspect-square">
+                <div className="min-h-12 md:aspect-square">
                     <Button className="h-full w-full" onClick={onSubmit} disabled={!currentInputValid}>Enter</Button>
                 </div>
             </div>)
