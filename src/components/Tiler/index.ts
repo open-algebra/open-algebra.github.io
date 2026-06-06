@@ -1,5 +1,5 @@
 /**
- * Tiler: Binary-tree window tiling system using React Bootstrap and @dnd-kit
+ * Tiler: Binary-tree window tiling system using local UI primitives and @dnd-kit
  */
 
 export { Tiler } from './Tiler';

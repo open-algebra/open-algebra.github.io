@@ -4,9 +4,9 @@ import React from 'react';
 import { DragDropProvider, DragEndEvent } from '@dnd-kit/react';
 import { ViewId, TilerProps } from './types';
 import { TilerNode } from './TilerNode';
-import { resizeByPath, moveLeaf } from './operations';
+import { resizeByPath, moveLeaf, removeLeaf } from './operations';
 import { parseDropZoneId, parseTileDragId } from './dnd';
-import './style.scss';
+import './style.css';
 
 type TilerComponent = <T extends ViewId = ViewId>(
     props: TilerProps<T> & React.RefAttributes<HTMLDivElement>
@@ -32,11 +32,7 @@ const TilerImpl = <T extends ViewId = ViewId>(
         };
 
         const handleClose = (id: T) => {
-            // The removeLeaf operation is handled by the consumer
-            renderTile(id, false, (closedId) => {
-                // This callback will be invoked when a tile is closed
-                // The consumer should handle the actual removal via onChange
-            });
+            onChange(removeLeaf(value, id));
         };
 
         const handleResize = (path: string, splitPercentage: number) => {
@@ -47,7 +43,7 @@ const TilerImpl = <T extends ViewId = ViewId>(
             <DragDropProvider onDragEnd={handleDragEnd}>
                 <div
                     ref={ref}
-                    className={`tiler-root bg-light-subtle flex-grow-1 ${className}`}
+                    className={`tiler-root flex-1 ${className}`}
                 >
                     {value ? (
                         <TilerNode<T>

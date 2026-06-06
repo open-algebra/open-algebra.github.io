@@ -1,7 +1,7 @@
 .tiler-root {
   min-height: 0;
   display: flex;
-  padding: 0.75rem;
+  padding: 1rem;
 }
 
 .tile-container {
@@ -36,21 +36,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(108, 117, 125, 0.08);
+  background: transparent;
   position: relative;
   flex-shrink: 0;
 }
 
 .tile-divider-vertical {
-  width: 0.65rem;
+  width: 1rem;
   cursor: col-resize;
-  min-width: 0.65rem;
+  min-width: 1rem;
 }
 
 .tile-divider-horizontal {
-  height: 0.65rem;
+  height: 1rem;
   cursor: row-resize;
-  min-height: 0.65rem;
+  min-height: 1rem;
 }
 
 .resize-handle {
@@ -63,14 +63,14 @@
   position: relative;
   user-select: none;
   pointer-events: auto;
+}
 
-  &::after {
-    content: '';
-    background: var(--bs-secondary);
-    border-radius: 0.25rem;
-    transition: background-color 0.15s ease;
-    pointer-events: none;
-  }
+.resize-handle::after {
+  content: "";
+  background: color-mix(in oklch, var(--muted-foreground) 34%, transparent);
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  pointer-events: none;
 }
 
 .resize-handle-vertical::after {
@@ -85,32 +85,37 @@
 
 .resize-handle:hover::after,
 .resize-handle:focus::after {
-  background: var(--bs-primary);
+  background: var(--primary);
 }
 
 .resize-handle:active::after {
-  background: var(--bs-info);
+  background: var(--ring);
 }
 
 .tile-panel {
   position: relative;
-  border-radius: 0.65rem;
+  border-color: rgba(255, 255, 255, 0.68);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 1rem 3rem rgba(15, 23, 42, 0.12), 0 0.1rem 0.25rem rgba(15, 23, 42, 0.08);
   overflow: hidden;
+  backdrop-filter: blur(18px);
+}
 
-  .card-body {
-    min-height: 0;
-    overflow: auto;
-    background: var(--bs-light-bg-subtle);
-  }
+.tile-panel .tile-panel-body {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  background: color-mix(in oklch, var(--background) 64%, transparent);
 }
 
 .tile-panel-header {
-  background: var(--bs-tertiary-bg);
-  border-bottom: 1px solid var(--bs-border-color-translucent);
+  background: transparent;
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 52%, transparent);
 }
 
 .tile-panel-over {
-  outline: 2px dashed var(--bs-primary);
+  outline: 2px dashed var(--primary);
   outline-offset: -2px;
 }
 
@@ -157,7 +162,7 @@
   border: 1px dashed rgba(13, 110, 253, 0.45);
   border-radius: 0.65rem;
   background: rgba(255, 255, 255, 0.88);
-  color: var(--bs-primary-text-emphasis);
+  color: var(--primary);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -167,10 +172,6 @@
     color 0.15s ease,
     transform 0.15s ease,
     box-shadow 0.15s ease;
-
-  i {
-    font-size: 1rem;
-  }
 }
 
 .tile-drop-zone-top {
@@ -194,8 +195,8 @@
 }
 
 .tile-drop-zone-active {
-  background: var(--bs-primary);
-  border-color: var(--bs-primary);
+  background: var(--primary);
+  border-color: var(--primary);
   color: #fff;
   box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.25);
   transform: scale(1.02);
@@ -207,6 +208,6 @@
 
 @media (max-width: 991px) {
   .tiler-root {
-    padding: 0.5rem;
+    padding: 0.75rem;
   }
 }

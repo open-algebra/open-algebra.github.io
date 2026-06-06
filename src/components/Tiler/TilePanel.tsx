@@ -2,7 +2,9 @@
 /* eslint-disable react-hooks/refs */
 
 import React from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Grip, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useDragOperation, useDraggable, useDroppable } from '@dnd-kit/react';
 import { DropPosition, ViewId } from './types';
 import { getDropZoneId, getTileDragId, parseTileDragId } from './dnd';
@@ -28,47 +30,49 @@ export const TilePanel = React.forwardRef<HTMLDivElement, TilePanelProps>(
         return (
             <Card
                 ref={dragRef}
-                className={`tile-panel h-100 shadow-sm ${
+                className={`tile-panel flex h-full flex-col shadow-sm ${
                     isDragging ? 'tile-panel-dragging' : ''
                 } ${showDropZones ? 'tile-panel-drop-mode' : ''}`}
             >
-                <Card.Header className="d-flex justify-content-between align-items-center gap-2 tile-panel-header">
-                    <div className="d-flex align-items-center gap-2">
+                <CardHeader className="tile-panel-header flex h-8 shrink-0 flex-row items-center justify-between gap-2 space-y-0 px-1.5 py-0">
+                    <div className="flex h-full min-w-0 items-center gap-1.5">
                         <Button
-                            variant="outline-secondary"
-                            size="sm"
-                            className="tile-drag-handle"
+                            variant="ghost"
+                            size="icon"
+                            className="tile-drag-handle size-6 border-0 bg-transparent text-muted-foreground shadow-none outline-none ring-0 hover:bg-black/5 focus-visible:ring-0"
                             ref={dragHandleRef}
                             title="Drag to rearrange windows"
+                            aria-label="Drag to rearrange windows"
                         >
-                            <i className="bi bi-grid-3x3-gap-fill" />
+                            <Grip className="size-3.5" />
                         </Button>
-                        <span className="fw-semibold">{title}</span>
+                        <span className="truncate text-xs font-semibold leading-none tracking-tight">{title}</span>
                     </div>
                     {canClose ? (
                         <Button
-                            variant="outline-danger"
-                            size="sm"
+                            variant="ghost"
+                            size="icon"
+                            className="size-6 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                             title="Close window"
+                            aria-label="Close window"
                             onClick={() => onClose(id)}
                         >
-                            <i className="bi bi-x-lg" />
+                            <X className="size-3.5" />
                         </Button>
                     ) : null}
-                </Card.Header>
-                <Card.Body className="tile-panel-body">{children}</Card.Body>
+                </CardHeader>
+                <CardContent className="tile-panel-body flex min-h-0 flex-1 flex-col p-0">{children}</CardContent>
                 {showDropZones ? (
                     <div className="tile-drop-grid">
-                        <TileDropZone id={id} position="top" iconClassName="bi bi-arrow-up" label="Top" />
-                        <TileDropZone id={id} position="left" iconClassName="bi bi-arrow-left" label="Left" />
+                        <TileDropZone id={id} position="top" label="Top" />
+                        <TileDropZone id={id} position="left" label="Left" />
                         <TileDropZone
                             id={id}
                             position="center"
-                            iconClassName="bi bi-arrow-left-right"
                             label="Swap"
                         />
-                        <TileDropZone id={id} position="right" iconClassName="bi bi-arrow-right" label="Right" />
-                        <TileDropZone id={id} position="bottom" iconClassName="bi bi-arrow-down" label="Bottom" />
+                        <TileDropZone id={id} position="right" label="Right" />
+                        <TileDropZone id={id} position="bottom" label="Bottom" />
                     </div>
                 ) : null}
             </Card>
@@ -81,11 +85,10 @@ TilePanel.displayName = 'TilePanel';
 interface TileDropZoneProps {
     id: ViewId;
     position: DropPosition;
-    iconClassName: string;
     label: string;
 }
 
-function TileDropZone({ id, position, iconClassName, label }: TileDropZoneProps) {
+function TileDropZone({ id, position, label }: TileDropZoneProps) {
     const drop = useDroppable({ id: getDropZoneId(id, position) });
     const dropRef = drop.ref;
     const isDropTarget = drop.isDropTarget;
@@ -97,7 +100,6 @@ function TileDropZone({ id, position, iconClassName, label }: TileDropZoneProps)
                 isDropTarget ? 'tile-drop-zone-active' : ''
             }`}
         >
-            <i className={iconClassName} />
             <span className="tile-drop-zone-label">{label}</span>
         </div>
     );

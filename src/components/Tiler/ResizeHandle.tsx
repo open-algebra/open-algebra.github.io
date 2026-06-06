@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 interface ResizeHandleProps {
     isVertical: boolean;
     onResize: (splitPercentage: number) => void;
-    containerRef: React.RefObject<HTMLDivElement>;
+    containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const ResizeHandle: React.FC<ResizeHandleProps> = ({

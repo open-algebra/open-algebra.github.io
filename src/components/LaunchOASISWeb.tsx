@@ -1,7 +1,5 @@
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/button";
 
 export default function LaunchOASISWeb() {
-    return <Link href={"/app"} className={"btn btn-primary"}>
-        Launch OASIS Web <i className={"bi-rocket-takeoff ps-1"}/>
-    </Link>;
+    return <ButtonLink href="/app">Launch OASIS Web</ButtonLink>;
 }

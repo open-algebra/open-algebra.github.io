@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@/styles/globals.scss";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/iosevka/500.css";
+import "@fontsource/iosevka/600.css";
+import "@fontsource/iosevka/700.css";
+import "@/styles/globals.css";
 import Script from "next/script";
 import CookieDisclaimer from "@/components/CookieDisclaimer";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Oasis",
@@ -18,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-light-subtle`}>
+      <body>
       <CookieDisclaimer />
       {children}
       <Script id="clarity-script" strategy="afterInteractive">

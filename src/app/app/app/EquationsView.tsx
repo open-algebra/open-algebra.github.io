@@ -1,8 +1,9 @@
-import {Alert, Container, Stack} from "react-bootstrap";
 import {useEffect, useRef, useState} from "react";
 import {useAppState} from "@/app/app/app/AppStateContext";
 import BigCat from "../../../../public/big-cat.svg"
 import Image from "next/image";
+import {Alert} from "@/components/ui/alert";
+import {Button} from "@/components/ui/button";
 
 export default function EquationsView() {
     const [showInDevWarning, setShowInDevWarning] = useState(true);
@@ -13,43 +14,49 @@ export default function EquationsView() {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     }, [history, currentInputText]);
 
-    return (<div className={"h-100 overflow-y-auto"}>
-            <Container className={"py-3"}>
-                <Stack gap={3}>
-                    <div className={"w-50 align-self-center"}>
-                        <Image src={BigCat} alt={"big cat"} className={"w-100 h-auto"} loading={"eager"} />
+    return (<div className={"h-full overflow-y-auto"}>
+            <div className={"mx-auto max-w-5xl px-4 py-3"}>
+                <div className="flex flex-col gap-3">
+                    <div className={"mx-auto w-1/2"}>
+                        <Image src={BigCat} alt={"big cat"} className={"h-auto w-full"} loading={"eager"} />
                     </div>
-                    <h1 className={"text-center"}>Open Algebra Software for Inferring Solutions</h1>
-                    <Alert variant={"warning"} show={showInDevWarning} onClose={() => setShowInDevWarning(false)}
-                           dismissible transition={false}>
-                        <h5>Here be dragons!</h5>
-                        OASIS and OASIS Web are still under active development. If something does not work, please feel free to <Alert.Link
+                    <h1 className={"text-center text-3xl font-semibold"}>Open Algebra Software for Inferring Solutions</h1>
+                    {showInDevWarning ? <Alert>
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                        <h5 className="mb-1 font-semibold">Here be dragons!</h5>
+                        OASIS and OASIS Web are still under active development. If something does not work, please feel free to <a
+                            className="font-medium underline-offset-4 hover:underline"
                             href={"https://github.com/open-algebra/Oasis/issues/new/choose"}>file an
-                            issue</Alert.Link>!
+                            issue</a>!
+                            </div>
+                            <Button type="button" variant="ghost" size="sm" onClick={() => setShowInDevWarning(false)}>Dismiss</Button>
+                        </div>
                     </Alert>
-                    {history.map(({query, response, error}, index) => (<Stack gap={2} key={index}>
-                            <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
+                    : null}
+                    {history.map(({query, response, error}, index) => (<div className="flex flex-col gap-2" key={index}>
+                            <div className={"self-end rounded-3xl bg-primary/15 p-3"}>
                                 <math display={"block"}
                                       dangerouslySetInnerHTML={{__html: query}}></math>
                             </div>
-                            {error ? <div className={"align-self-start bg-danger-subtle rounded-5 p-3"}>
+                            {error ? <div className={"self-start rounded-3xl bg-destructive/15 p-3 text-destructive"}>
                                 <strong>Error:</strong> {response}
-                            </div> : <div className={"align-self-start bg-secondary-subtle rounded-5 p-3"}>
+                            </div> : <div className={"self-start rounded-3xl bg-secondary p-3"}>
                                 <math display={"block"}
                                       dangerouslySetInnerHTML={{__html: response}}></math>
                             </div>}
-                        </Stack>))}
+                        </div>))}
                     {currentInputExpressionStr &&
-                            <Stack gap={3}>
-                                <div className={"align-self-end bg-primary-subtle rounded-5 p-3"}>
+                            <div className="flex flex-col gap-3">
+                                <div className={"self-end rounded-3xl bg-primary/15 p-3"}>
                                         <math display={"block"}
                                               dangerouslySetInnerHTML={{__html: currentInputExpressionStr}}></math>
                                 </div>
-                                <small className={"font-monospace text-muted ms-auto"}>input string: {currentInputText}</small>
-                            </Stack>
+                                <small className={"ml-auto font-mono text-muted-foreground"}>input string: {currentInputText}</small>
+                            </div>
                     }
-                </Stack>
-            </Container>
+                </div>
+            </div>
             <div ref={bottomRef}/>
         </div>)
 }
