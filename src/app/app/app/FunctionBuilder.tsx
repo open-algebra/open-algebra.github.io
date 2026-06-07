@@ -1,5 +1,7 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import {Button, Col, Form, Modal, ModalProps, Row, Stack} from "react-bootstrap";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Input} from "@/components/ui/input";
 import {useAppStateDispatch} from "@/app/app/app/AppStateContext";
 import {MainModule} from "@open-algebra/oasis/oasis-web";
 
@@ -9,11 +11,13 @@ interface FunctionBuilderProps {
     firstArgLabel: string
     secondArgLabel: string
     oasis: MainModule
+    show: boolean
+    onHide: () => void
 }
 
 export default function FunctionBuilder({
-                                            title, func, firstArgLabel, secondArgLabel, oasis, onHide, ...props
-                                        }: FunctionBuilderProps & ModalProps) {
+                                            title, func, firstArgLabel, secondArgLabel, oasis, onHide, show
+                                        }: FunctionBuilderProps) {
     const [firstArg, setFirstArg] = useState("");
     const [secondArg, setSecondArg] = useState("");
     const dispatch = useAppStateDispatch();
@@ -37,42 +41,37 @@ export default function FunctionBuilder({
         onHide && onHide();
     }
 
-    return (<Modal onHide={onHide} {...props}>
-            <Modal.Header closeButton>
-                <Modal.Title>{title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Stack direction="horizontal" className="justify-content-center py-5">
+    return (<Dialog open={show} onOpenChange={(open) => !open && onHide()}>
+            <DialogContent onClose={onHide}>
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                </DialogHeader>
+                <div className="flex justify-center py-8">
                     {currentEntry
                         ? <math display={"block"}
                                 dangerouslySetInnerHTML={{__html: currentEntry}}></math>
                         : "Failed to parse expression"}
 
-                </Stack>
-                <Form onSubmit={onSubmit}>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column={true} sm="2">
+                </div>
+                <form onSubmit={onSubmit} className="space-y-3">
+                    <div className="grid gap-2 sm:grid-cols-[8rem_1fr] sm:items-center">
+                        <label className="text-sm font-medium">
                             {firstArgLabel}
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstArg(e.target.value)}/>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column={true} sm="2">
+                        </label>
+                        <Input onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstArg(e.target.value)}/>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-[8rem_1fr] sm:items-center">
+                        <label className="text-sm font-medium">
                             {secondArgLabel}
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control
+                        </label>
+                        <Input
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSecondArg(e.target.value)}/>
-                        </Col>
-                    </Form.Group>
+                    </div>
                     <Button
-                        variant="primary"
                         type={"submit"}
                         disabled={!currentEntry}
                     >Submit</Button>
-                </Form>
-            </Modal.Body>
-        </Modal>)
+                </form>
+            </DialogContent>
+        </Dialog>)
 }

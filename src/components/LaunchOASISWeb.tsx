@@ -1,8 +1,5 @@
-import Link from "next/link";
-import {Button} from "react-bootstrap";
+import { ButtonLink } from "@/components/ui/button";
 
 export default function LaunchOASISWeb() {
-    return <Link href={"/app"} passHref legacyBehavior>
-        <Button>Launch OASIS Web <i className={"bi-rocket-takeoff ps-1"}/></Button>
-    </Link>;
+    return <ButtonLink href="/app">Launch OASIS Web</ButtonLink>;
 }

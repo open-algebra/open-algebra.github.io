@@ -1,4 +1,4 @@
-import {Button, Col, Row} from "react-bootstrap";
+import {Button} from "@/components/ui/button";
 import {FormEvent, ReactNode} from "react";
 import {
     useAppState,
@@ -60,29 +60,22 @@ export default function Keypad() {
     }
 
     return (
-            <Row xs={4} className={"h-100 p-2 g-2 overflow-y-auto overflow-x-hidden"}>
-                <Col>
-                    <div className={"ratio ratio-1x1"}>
-                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={clearTextInput}>Clear</Button>
-                    </div>
-                </Col>
-                <Col>
-                    <div className={"ratio ratio-1x1"}>
-                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={backspaceTextInput}><i
-                            className={"bi-backspace"}/></Button>
-                    </div>
-                </Col>
-                {Array.from(KEYS.keys()).map((key, i) => (<Col key={i}>
-                    <div className={"ratio ratio-1x1"}>
-                        <Button variant={"light"} className={"w-100 h-100 border"} onClick={() => appendToInput(key)}>
+            <div className="grid h-full grid-cols-4 gap-2 overflow-y-auto overflow-x-hidden p-2">
+                <div className="min-h-12 md:aspect-square">
+                    <Button variant="secondary" className="h-full w-full border" onClick={clearTextInput}>Clear</Button>
+                </div>
+                <div className="min-h-12 md:aspect-square">
+                    <Button variant="secondary" className="h-full w-full border" onClick={backspaceTextInput}>Back</Button>
+                </div>
+                {Array.from(KEYS.keys()).map((key, i) => (
+                    <div className="min-h-12 md:aspect-square" key={i}>
+                        <Button variant="secondary" className="h-full w-full border" onClick={() => appendToInput(key)}>
                             <math display={"block"}>{KEYS.get(key)}</math>
                         </Button>
                     </div>
-                    </Col>))}
-                <Col>
-                    <div className={"ratio ratio-1x1"}>
-                        <Button className={"w-100 h-100"} onClick={onSubmit} disabled={!currentInputValid}><i className={"bi-arrow-return-left"}/></Button>
-                    </div>
-                </Col>
-            </Row>)
+                ))}
+                <div className="min-h-12 md:aspect-square">
+                    <Button className="h-full w-full" onClick={onSubmit} disabled={!currentInputValid}>Enter</Button>
+                </div>
+            </div>)
 }

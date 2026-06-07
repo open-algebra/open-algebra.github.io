@@ -1,0 +1,213 @@
+.tiler-root {
+  min-height: 0;
+  display: flex;
+  padding: 1rem;
+}
+
+.tile-container {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.tile-split {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.tile-split-row {
+  flex-direction: row;
+}
+
+.tile-split-column {
+  flex-direction: column;
+}
+
+.tile-split-pane {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.tile-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tile-divider-vertical {
+  width: 1rem;
+  cursor: col-resize;
+  min-width: 1rem;
+}
+
+.tile-divider-horizontal {
+  height: 1rem;
+  cursor: row-resize;
+  min-height: 1rem;
+}
+
+.resize-handle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: inherit;
+  position: relative;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.resize-handle::after {
+  content: "";
+  background: color-mix(in oklch, var(--muted-foreground) 34%, transparent);
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  pointer-events: none;
+}
+
+.resize-handle-vertical::after {
+  width: 0.25rem;
+  height: 2.5rem;
+}
+
+.resize-handle-horizontal::after {
+  width: 2.5rem;
+  height: 0.25rem;
+}
+
+.resize-handle:hover::after,
+.resize-handle:focus::after {
+  background: var(--primary);
+}
+
+.resize-handle:active::after {
+  background: var(--ring);
+}
+
+.tile-panel {
+  position: relative;
+  border-color: rgba(255, 255, 255, 0.68);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 1rem 3rem rgba(15, 23, 42, 0.12), 0 0.1rem 0.25rem rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+}
+
+.tile-panel .tile-panel-body {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  background: color-mix(in oklch, var(--background) 64%, transparent);
+}
+
+.tile-panel-header {
+  background: transparent;
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 52%, transparent);
+}
+
+.tile-panel-over {
+  outline: 2px dashed var(--primary);
+  outline-offset: -2px;
+}
+
+.tile-panel-drop-mode .tile-panel-body,
+.tile-panel-drop-mode .tile-panel-header {
+  filter: saturate(0.9);
+}
+
+.tile-panel-dragging {
+  opacity: 0.75;
+}
+
+.tile-drag-handle {
+  cursor: grab;
+}
+
+.tile-drag-handle:active {
+  cursor: grabbing;
+}
+
+.tile-drop-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    ". top ."
+    "left center right"
+    ". bottom .";
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(248, 249, 250, 0.24);
+  backdrop-filter: blur(2px);
+}
+
+.tile-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 1px dashed rgba(13, 110, 253, 0.45);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tile-drop-zone-top {
+  grid-area: top;
+}
+
+.tile-drop-zone-left {
+  grid-area: left;
+}
+
+.tile-drop-zone-center {
+  grid-area: center;
+}
+
+.tile-drop-zone-right {
+  grid-area: right;
+}
+
+.tile-drop-zone-bottom {
+  grid-area: bottom;
+}
+
+.tile-drop-zone-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.25);
+  transform: scale(1.02);
+}
+
+.tile-drop-zone-label {
+  line-height: 1;
+}
+
+@media (max-width: 991px) {
+  .tiler-root {
+    padding: 0.75rem;
+  }
+}

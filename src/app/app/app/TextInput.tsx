@@ -1,5 +1,6 @@
 import {useRef, KeyboardEvent, FormEvent, ChangeEvent} from "react";
-import {Button, Form, Stack} from "react-bootstrap";
+import {Button} from "@/components/ui/button";
+import {Textarea} from "@/components/ui/textarea";
 import {
     useAppState,
     useAppStateDispatch
@@ -27,24 +28,21 @@ export default function TextInput() {
     }
 
     return (
-        <Form onSubmit={onSubmit} className={"p-2 h-100"} ref={formRef}>
-            <Stack className={"d-flex flex-column flex-md-row h-100"} gap={2}>
-                <Form.Control
-                    as={"textarea"}
-                    className={"flex-grow-1"}
+        <form onSubmit={onSubmit} className="h-full p-2" ref={formRef}>
+            <div className="flex h-full flex-col gap-2 md:flex-row">
+                <Textarea
+                    className={`flex-1 resize-none ${!currentInputValid ? "border-destructive focus-visible:ring-destructive" : ""}`}
                     style={{resize: "none"}}
                     placeholder="Enter an expression..."
-                    isInvalid={!currentInputValid}
                     onChange={onChange}
                     onKeyDown={onEnterPress}
                     value={currentInputText}
                 />
                 <Button
-                    variant="primary"
                     type={"submit"}
                     disabled={!currentInputValid}
                 >Submit</Button>
-            </Stack>
-        </Form>
+            </div>
+        </form>
     )
 }

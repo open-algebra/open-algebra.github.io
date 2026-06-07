@@ -1,5 +1,5 @@
 import {AppStateContext, HistoryEntry} from "@/app/app/app/AppStateContext";
-import {NavDropdown} from "react-bootstrap";
+import {MenubarItem} from "@/components/ui/menubar";
 import React, {useContext} from "react";
 
 function downloadXML(history: HistoryEntry[]) {
@@ -49,7 +49,7 @@ function downloadXML(history: HistoryEntry[]) {
 export default function DownloadXMLButton() {
     const {history} = useContext(AppStateContext);
 
-    return (<NavDropdown.Item as={"button"} onClick={() => downloadXML(history)}>Export
+    return (<MenubarItem onSelect={() => downloadXML(history)}>Export
         as
-        XML</NavDropdown.Item>)
+        XML</MenubarItem>)
 }
